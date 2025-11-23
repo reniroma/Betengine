@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BetEngine | Widgets</title>
+
+    <script>
+        (function injectCacheBustedAssets() {
+            const now = new Date();
+            const version = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+
+            const withVersion = (path) => {
+                const url = new URL(path, window.location.href);
+                url.searchParams.set('v', version);
+                return `${url.pathname}${url.search}`;
+            };
+
+            const addStylesheet = (href) => {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = withVersion(href);
+                document.head.appendChild(link);
+            };
+
+            const addScript = (src) => {
+                const script = document.createElement('script');
+                script.src = withVersion(src);
+                script.defer = true;
+                document.head.appendChild(script);
+            };
+
+            window.__CACHE_BUST_VERSION__ = version;
+            addStylesheet('styles/reset.css');
+            addStylesheet('styles/global.css');
+            addScript('scripts/main.js');
+        })();
+    </script>
+</head>
+<body>
+    <div class="page">
+        <div id="header-placeholder"></div>
+
+        <main class="content" role="main">
+            <section class="page-hero">
+                <div>
+                    <p class="eyebrow">Embed kit</p>
+                    <h1>Widgets</h1>
+                    <p class="subtitle">Reusable UI blocks styled with the updated BetEngine theme.</p>
+                    <div class="page-hero__meta">
+                        <span class="pill pill--accent">Theme aligned</span>
+                        <span class="pill">Ready for every page</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-card" aria-label="Widget gallery">
+                <h2>Widget set</h2>
+                <div class="card-grid">
+                    <div class="widget">
+                        <h4>Scoreline</h4>
+                        <p class="subtitle">Compact live score module using neon accents.</p>
+                    </div>
+                    <div class="widget">
+                        <h4>Mini odds</h4>
+                        <p class="subtitle">Odds buttons share hover and focus styling.</p>
+                    </div>
+                    <div class="widget">
+                        <h4>Stats spark</h4>
+                        <p class="subtitle">Inline indicators respect the global palette.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div id="footer-placeholder"></div>
+    </div>
+</body>
+</html>

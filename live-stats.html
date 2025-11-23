@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BetEngine | Live stats</title>
+
+    <script>
+        (function injectCacheBustedAssets() {
+            const now = new Date();
+            const version = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+
+            const withVersion = (path) => {
+                const url = new URL(path, window.location.href);
+                url.searchParams.set('v', version);
+                return `${url.pathname}${url.search}`;
+            };
+
+            const addStylesheet = (href) => {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = withVersion(href);
+                document.head.appendChild(link);
+            };
+
+            const addScript = (src) => {
+                const script = document.createElement('script');
+                script.src = withVersion(src);
+                script.defer = true;
+                document.head.appendChild(script);
+            };
+
+            window.__CACHE_BUST_VERSION__ = version;
+            addStylesheet('styles/reset.css');
+            addStylesheet('styles/global.css');
+            addScript('scripts/main.js');
+        })();
+    </script>
+</head>
+<body>
+    <div class="page">
+        <div id="header-placeholder"></div>
+
+        <main class="content" role="main">
+            <section class="page-hero">
+                <div>
+                    <p class="eyebrow">In-play data</p>
+                    <h1>Live stats</h1>
+                    <p class="subtitle">Real-time numbers use the same typography, spacing, and neon accents.</p>
+                    <div class="page-hero__meta">
+                        <span class="pill pill--accent">Latency tuned</span>
+                        <span class="pill">Auto-refresh enabled</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-card" aria-label="Possession and momentum">
+                <h2>Momentum</h2>
+                <div class="dual-columns">
+                    <article class="stat-card">
+                        <h3>Possession</h3>
+                        <div class="meter-bar"><span style="width: 55%"></span></div>
+                        <p class="subtitle">Home side edging control.</p>
+                    </article>
+                    <article class="stat-card">
+                        <h3>Pressure index</h3>
+                        <div class="meter-bar"><span style="width: 64%"></span></div>
+                        <p class="subtitle">Theme keeps gauges consistent.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section-card" aria-label="Shot map summary">
+                <h2>Key stats</h2>
+                <div class="info-grid">
+                    <div class="info-tile">
+                        <p class="label">Shots</p>
+                        <p class="value">12 vs 8</p>
+                    </div>
+                    <div class="info-tile">
+                        <p class="label">xG</p>
+                        <p class="value">1.6 vs 0.9</p>
+                    </div>
+                    <div class="info-tile">
+                        <p class="label">Danger passes</p>
+                        <p class="value">18 vs 11</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div id="footer-placeholder"></div>
+    </div>
+</body>
+</html>

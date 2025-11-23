@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BetEngine | Dashboard</title>
+
+    <script>
+        (function injectCacheBustedAssets() {
+            const now = new Date();
+            const version = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+
+            const withVersion = (path) => {
+                const url = new URL(path, window.location.href);
+                url.searchParams.set('v', version);
+                return `${url.pathname}${url.search}`;
+            };
+
+            const addStylesheet = (href) => {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = withVersion(href);
+                document.head.appendChild(link);
+            };
+
+            const addScript = (src) => {
+                const script = document.createElement('script');
+                script.src = withVersion(src);
+                script.defer = true;
+                document.head.appendChild(script);
+            };
+
+            window.__CACHE_BUST_VERSION__ = version;
+            addStylesheet('styles/reset.css');
+            addStylesheet('styles/global.css');
+            addScript('scripts/main.js');
+        })();
+    </script>
+</head>
+<body>
+    <div class="page">
+        <div id="header-placeholder"></div>
+
+        <main class="content" role="main">
+            <section class="page-hero">
+                <div>
+                    <p class="eyebrow">Account</p>
+                    <h1>Dashboard</h1>
+                    <p class="subtitle">Profile, alerts, and saved picks all inherit the updated palette.</p>
+                    <div class="page-hero__meta">
+                        <span class="pill pill--accent">Profile ready</span>
+                        <span class="pill">Widgets synced</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-card" aria-label="User overview">
+                <h2>Profile snapshot</h2>
+                <div class="card-grid">
+                    <article class="stat-card">
+                        <h3>Watchlist</h3>
+                        <p class="value">12 items</p>
+                        <p class="subtitle">Clubs, leagues, and fixtures.</p>
+                    </article>
+                    <article class="stat-card">
+                        <h3>Notifications</h3>
+                        <p class="value">5</p>
+                        <p class="subtitle">Odds drift + kick-off alerts.</p>
+                    </article>
+                    <article class="stat-card">
+                        <h3>Confidence</h3>
+                        <p class="value">High</p>
+                        <p class="subtitle">Based on recent form.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section-card" aria-label="Profile widgets">
+                <h2>Dashboard widgets</h2>
+                <div class="dual-columns">
+                    <div class="widget">
+                        <h4>Upcoming</h4>
+                        <ul>
+                            <li><span>Brighton vs Newcastle</span><span class="pill">Today</span></li>
+                            <li><span>Inter vs Lazio</span><span class="pill pill--accent">Tonight</span></li>
+                        </ul>
+                    </div>
+                    <div class="widget">
+                        <h4>Saved bets</h4>
+                        <ul>
+                            <li><span>Napoli to win</span><span class="pill">Boost</span></li>
+                            <li><span>Spurs over 2.5</span><span class="pill">Tracking</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div id="footer-placeholder"></div>
+    </div>
+</body>
+</html>

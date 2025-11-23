@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BetEngine | Team page</title>
+
+    <script>
+        (function injectCacheBustedAssets() {
+            const now = new Date();
+            const version = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+
+            const withVersion = (path) => {
+                const url = new URL(path, window.location.href);
+                url.searchParams.set('v', version);
+                return `${url.pathname}${url.search}`;
+            };
+
+            const addStylesheet = (href) => {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = withVersion(href);
+                document.head.appendChild(link);
+            };
+
+            const addScript = (src) => {
+                const script = document.createElement('script');
+                script.src = withVersion(src);
+                script.defer = true;
+                document.head.appendChild(script);
+            };
+
+            window.__CACHE_BUST_VERSION__ = version;
+            addStylesheet('styles/reset.css');
+            addStylesheet('styles/global.css');
+            addScript('scripts/main.js');
+        })();
+    </script>
+</head>
+<body>
+    <div class="page">
+        <div id="header-placeholder"></div>
+
+        <main class="content" role="main">
+            <section class="page-hero">
+                <div>
+                    <p class="eyebrow">Team profile</p>
+                    <h1>Napoli</h1>
+                    <p class="subtitle">Club identity, form, and roster cards styled to the new BetEngine theme.</p>
+                    <div class="page-hero__meta">
+                        <span class="pill pill--accent">Serie A</span>
+                        <span class="pill">Stadio Diego Armando Maradona</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-card" aria-label="Team stats">
+                <h2>Key stats</h2>
+                <div class="card-grid">
+                    <article class="stat-card">
+                        <h3>Form</h3>
+                        <p class="value">W W D L W</p>
+                        <p class="subtitle">Momentum highlighted with neon glow.</p>
+                    </article>
+                    <article class="stat-card">
+                        <h3>Goals</h3>
+                        <p class="value">1.9 / match</p>
+                        <p class="subtitle">Uses shared text and accent colors.</p>
+                    </article>
+                    <article class="stat-card">
+                        <h3>Possession</h3>
+                        <p class="value">58%</p>
+                        <p class="subtitle">UI applies across all player modules.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section-card" aria-label="Squad depth">
+                <h2>Squad</h2>
+                <ul class="list-stacked">
+                    <li><span>Victor Osimhen</span><span class="pill">Striker</span></li>
+                    <li><span>Khvicha Kvaratskhelia</span><span class="pill">Winger</span></li>
+                    <li><span>Stanislav Lobotka</span><span class="pill">Midfield</span></li>
+                </ul>
+            </section>
+        </main>
+
+        <div id="footer-placeholder"></div>
+    </div>
+</body>
+</html>
