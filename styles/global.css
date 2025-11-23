@@ -7,6 +7,7 @@
     --accent: #34e89e;
     --accent-2: #72a6ff;
     --accent-green: #34e89e;
+    --glow-green: 0 0 0 1px rgba(52, 232, 158, 0.35), 0 0 14px rgba(52, 232, 158, 0.35);
     --accent-blue: #72a6ff;
     --glow-blue: 0 12px 30px rgba(114, 166, 255, 0.4);
     --text: #f5f7fb;
@@ -749,6 +750,18 @@ p, span, label {
     padding: 12px 14px;
     background: rgba(255, 255, 255, 0.04);
     border-bottom: 1px solid var(--border);
+    position: relative;
+}
+
+.league-header::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--accent-green);
+    box-shadow: var(--glow-green);
 }
 
 .league-header h3 {
