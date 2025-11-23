@@ -1,21 +1,38 @@
 /* Base layout */
 :root {
-    --bg: #0f1117;
+    --bg-primary: #0f1117;
+    --text-primary: #f5f7fb;
+    --text-secondary: #9ea7b3;
     --panel: #131725;
-    --muted: #9ea7b3;
     --accent: #34e89e;
     --accent-2: #72a6ff;
-    --text: #f5f7fb;
+    --bg: var(--bg-primary);
+    --text: var(--text-primary);
+    --muted: var(--text-secondary);
     --border: #1f2432;
 }
 
+html {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
 body {
+    background-color: var(--bg-primary);
     background: radial-gradient(circle at 20% 20%, rgba(114, 166, 255, 0.08), transparent 35%),
                 radial-gradient(circle at 80% 10%, rgba(52, 232, 158, 0.08), transparent 30%),
-                var(--bg);
-    color: var(--text);
+                var(--bg-primary);
+    color: var(--text-primary);
     font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
     line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5 {
+    color: var(--text-primary);
+}
+
+p, span, label {
+    color: var(--text-secondary);
 }
 
 .page {
