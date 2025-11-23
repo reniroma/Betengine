@@ -83,6 +83,14 @@ body {
     color: var(--accent);
 }
 
+.nav-menu .is-active {
+    color: var(--accent);
+    opacity: 1;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+}
+
 /* Hero */
 .hero {
     display: grid;
@@ -365,6 +373,13 @@ body {
 .filter-chip:focus-visible {
     border-color: var(--accent);
     background: rgba(52, 232, 158, 0.08);
+}
+
+.filter-chip.is-active {
+    border-color: var(--accent);
+    background: rgba(52, 232, 158, 0.18);
+    color: var(--text);
+    box-shadow: 0 0 0 1px rgba(52, 232, 158, 0.32);
 }
 
 .filters-card select,
