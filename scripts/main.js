@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadComponent(
         'header-placeholder',
-        'Frontend/components/header.html',
+        'components/header.html',
         `<header class="main-header">
             <div class="header-container">
                 <h1 class="logo">BetEngine</h1>
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadComponent(
         'footer-placeholder',
-        'Frontend/components/footer.html',
+        'components/footer.html',
         `<footer class="main-footer">
             <div class="footer-container">
                 <p>© 2025 BetEngine. All rights reserved.</p>
