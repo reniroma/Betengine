@@ -5,109 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>BetEngine</title>
 
-    <style>
-        body {
-            background: #111;
-            color: #fff;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        /* ------------------- HEADER ------------------- */
-        .main-header {
-            width: 100%;
-            background: #181818;
-            border-bottom: 1px solid #333;
-            padding: 15px 0;
-        }
-
-        .header-container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 22px;
-            font-weight: bold;
-            color: #00e676;
-        }
-
-        .nav-menu a {
-            margin-left: 20px;
-            font-size: 16px;
-            color: #fff;
-            opacity: 0.85;
-            transition: 0.3s ease;
-            text-decoration: none;
-        }
-
-        .nav-menu a:hover {
-            opacity: 1;
-            color: #00e676;
-        }
-
-        /* ------------------- FOOTER ------------------- */
-        .main-footer {
-            width: 100%;
-            background: #111;
-            border-top: 1px solid #333;
-            padding: 20px 0;
-        }
-
-        .footer-container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            text-align: center;
-            color: #666;
-            font-size: 14px;
-        }
-
-        /* ------------------- FIX FOOTER POSITION ------------------- */
-        html, body {
-            height: 100%;
-        }
-
-        body {
-            display: flex;
-            flex-direction: column;
-        }
-
-        footer {
-            margin-top: auto;
-        }
-    </style>
+    <link rel="stylesheet" href="Frontend/styles/reset.css" />
+    <link rel="stylesheet" href="Frontend/styles/global.css" />
 </head>
-
 <body>
+    <div class="page">
+        <div id="header-placeholder"></div>
 
-    <!-- HEADER -->
-    <header class="main-header">
-        <div class="header-container">
-            <h1 class="logo">BetEngine</h1>
+        <main class="content" role="main">
+            <section class="hero">
+                <div class="hero__text">
+                    <p class="eyebrow">Next-gen sports analytics</p>
+                    <h1>BetEngine keeps bettors informed and prepared.</h1>
+                    <p class="lede">
+                        Track live fixtures, spot value, and unlock deeper insights with a clean, fast layout.
+                    </p>
+                    <div class="hero__actions">
+                        <a class="btn" href="#">Explore matches</a>
+                        <a class="btn btn--secondary" href="#">View leagues</a>
+                    </div>
+                </div>
+                <div class="hero__panel">
+                    <h2>Live Highlights</h2>
+                    <ul class="highlight-list">
+                        <li>
+                            <span class="badge">FT</span>
+                            <div>
+                                <p class="label">Premier League</p>
+                                <p class="match">Brighton 2 - 1 Newcastle</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="badge badge--inplay">LIVE</span>
+                            <div>
+                                <p class="label">La Liga</p>
+                                <p class="match">Valencia 0 - 0 Sevilla</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="badge badge--upcoming">19:45</span>
+                            <div>
+                                <p class="label">Serie A</p>
+                                <p class="match">Napoli vs. Roma</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
 
-            <nav class="nav-menu">
-                <a href="#">Home</a>
-                <a href="#">Matches</a>
-                <a href="#">Leagues</a>
-                <a href="#">Stats</a>
-            </nav>
-        </div>
-    </header>
+            <section class="feature-grid" aria-label="Platform features">
+                <article class="feature">
+                    <h3>Real-time stats</h3>
+                    <p>Never miss a key moment with lightning-fast updates and clean summaries.</p>
+                </article>
+                <article class="feature">
+                    <h3>Trusted insights</h3>
+                    <p>Surface the metrics that matter with clear confidence signals for every pick.</p>
+                </article>
+                <article class="feature">
+                    <h3>Favorites first</h3>
+                    <p>Create watchlists to track leagues, clubs, or fixtures important to you.</p>
+                </article>
+            </section>
+        </main>
 
-    <!-- CONTENT -->
-    <h1 style="padding: 20px;">BetEngine is live</h1>
+        <div id="footer-placeholder"></div>
+    </div>
 
-    <!-- FOOTER -->
-    <footer class="main-footer">
-        <div class="footer-container">
-            <p>© 2025 BetEngine. All rights reserved.</p>
-        </div>
-    </footer>
-
+    <script src="Frontend/scripts/main.js" defer></script>
 </body>
 </html>
