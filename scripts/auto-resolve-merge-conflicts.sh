@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MODE="theirs"
-if [[ "${1-}" == "--ours" ]]; then
-  MODE="ours"
+MODE="ours"
+if [[ "${1-}" == "--theirs" ]]; then
+  MODE="theirs"
+  shift
+elif [[ "${1-}" == "--ours" ]]; then
   shift
 fi
 
