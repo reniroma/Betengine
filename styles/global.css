@@ -778,16 +778,15 @@ p, span, label {
 
 .match-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: 64px minmax(0, 1fr);
     grid-template-areas:
-        'time'
-        'status'
-        'home'
-        'away'
-        'odds'
-        'action';
-    gap: 10px;
-    padding: 12px 14px;
+        'time status'
+        'home home'
+        'away away'
+        'odds odds'
+        'action action';
+    gap: 8px 12px;
+    padding: 10px 12px;
     border-bottom: 1px solid var(--border);
     background: var(--bg-card);
     transition: border 0.2s ease, background 0.2s ease;
@@ -800,6 +799,7 @@ p, span, label {
     color: var(--muted);
     grid-area: time;
     min-width: 0;
+    justify-content: flex-start;
 }
 
 .match-row .home,
@@ -807,6 +807,7 @@ p, span, label {
     display: inline-flex;
     align-items: center;
     min-width: 0;
+    line-height: 1.4;
 }
 
 .match-row .home {
@@ -870,8 +871,9 @@ p, span, label {
 .status {
     display: inline-flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 8px;
-    min-width: 90px;
+    min-width: 0;
     grid-area: status;
 }
 
@@ -889,6 +891,7 @@ p, span, label {
     align-items: stretch;
     grid-area: odds;
     width: 100%;
+    align-self: stretch;
 }
 
 .odd-cell {
@@ -1127,16 +1130,19 @@ p, span, label {
     }
 
     .match-row {
-        grid-template-columns: 78px minmax(0, 1.35fr) minmax(0, 1.35fr) minmax(0, 1fr) 118px;
-        grid-template-areas:
-            "time home away odds action"
-            "status home away odds action";
-        gap: 14px 18px;
+        grid-template-columns: 78px minmax(0, 1.25fr) minmax(0, 1.25fr) auto minmax(0, 1fr) 112px;
+        grid-template-areas: "time home away status odds action";
+        gap: 12px 18px;
         align-items: center;
     }
 
     .match-row .time {
         min-width: 80px;
+    }
+
+    .status {
+        justify-content: center;
+        min-width: 84px;
     }
 
     .match-row .match-action {
@@ -1156,9 +1162,9 @@ p, span, label {
     }
 
     .match-row {
-        grid-template-columns: 84px minmax(0, 1.25fr) minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 1.05fr) 124px;
+        grid-template-columns: 86px minmax(0, 1.2fr) minmax(0, 1.2fr) auto minmax(0, 1.05fr) 124px;
         grid-template-areas: "time home away status odds action";
-        gap: 14px 20px;
+        gap: 12px 18px;
         align-items: center;
     }
 
