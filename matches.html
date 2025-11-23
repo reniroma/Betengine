@@ -5,8 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>BetEngine | Matches</title>
 
-    <link rel="stylesheet" href="styles/reset.css" />
-    <link rel="stylesheet" href="styles/global.css" />
+    <script>
+        (function injectCacheBustedAssets() {
+            const now = new Date();
+            const version = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+
+            const withVersion = (path) => {
+                const url = new URL(path, window.location.href);
+                url.searchParams.set('v', version);
+                return `${url.pathname}${url.search}`;
+            };
+
+            const addStylesheet = (href) => {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = withVersion(href);
+                document.head.appendChild(link);
+            };
+
+            const addScript = (src) => {
+                const script = document.createElement('script');
+                script.src = withVersion(src);
+                script.defer = true;
+                document.head.appendChild(script);
+            };
+
+            window.__CACHE_BUST_VERSION__ = version;
+            addStylesheet('styles/reset.css');
+            addStylesheet('styles/global.css');
+            addScript('scripts/main.js');
+        })();
+    </script>
 </head>
 <body>
     <div class="page">
@@ -178,7 +207,5 @@
 
         <div id="footer-placeholder"></div>
     </div>
-
-    <script src="scripts/main.js" defer></script>
 </body>
 </html>
