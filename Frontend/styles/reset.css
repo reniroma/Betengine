@@ -1,7 +1,45 @@
+/* --- RESET BASE --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-/* Reset CSS */
+/* --- HTML & BODY DEFAULTS --- */
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+/* --- GLOBAL FONT & COLORS --- */
 body {
   background: #111;
   color: #fff;
   font-family: Arial, sans-serif;
+  line-height: 1.4;
+}
+
+/* --- REMOVE LIST STYLES --- */
+ul, ol {
+  list-style: none;
+}
+
+/* --- REMOVE LINK UNDERLINES --- */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* --- IMAGES CLEAN --- */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* --- BUTTON CLEAN --- */
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
 }
