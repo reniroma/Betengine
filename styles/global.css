@@ -1,45 +1,38 @@
 /* Base layout */
 :root {
-    /* CORE DARK BACKGROUND */
-    --bg-primary: #0D0A14;
-    --bg-secondary: #14101F;
-    --bg-card: #191626;
-    --bg-card-alt: #211D30;
-
-    /* TEXT */
-    --text-primary: #F7F3FF;
-    --text-secondary: #CFC6DD;
-    --text-muted: #A79BBC;
-
-    /* PREMIUM ACCENTS */
-    --brand-gold: #F6C65B;
-    --brand-rose: #E08ABD;
-
-    /* LINES / BORDERS */
-    --border-light: rgba(255, 255, 255, 0.07);
-    --border-strong: rgba(255, 255, 255, 0.14);
-
-    /* DEPTH */
-    --shadow-soft: 0 14px 34px rgba(0, 0, 0, 0.38);
-    --shadow-strong: 0 18px 52px rgba(0, 0, 0, 0.44);
-
-    /* Legacy aliases */
+    --bg-primary: #0f1117;
+    --text-primary: #f5f7fb;
+    --text-secondary: #9ea7b3;
+    --panel: #131725;
+    --accent: #34e89e;
+    --accent-2: #72a6ff;
     --bg: var(--bg-primary);
-    --panel: var(--bg-card);
-    --muted: var(--text-muted);
     --text: var(--text-primary);
-    --border: var(--border-light);
+    --muted: var(--text-secondary);
+    --border: #1f2432;
+}
+
+html {
+    background: var(--bg-primary);
+    color: var(--text-primary);
 }
 
 body {
-    background: var(--bg-primary);
+    background-color: var(--bg-primary);
+    background: radial-gradient(circle at 20% 20%, rgba(114, 166, 255, 0.08), transparent 35%),
+                radial-gradient(circle at 80% 10%, rgba(52, 232, 158, 0.08), transparent 30%),
+                var(--bg-primary);
     color: var(--text-primary);
     font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
     line-height: 1.6;
 }
 
-.subtitle {
-    color: var(--muted);
+h1, h2, h3, h4, h5 {
+    color: var(--text-primary);
+}
+
+p, span, label {
+    color: var(--text-secondary);
 }
 
 .page {
