@@ -26,7 +26,7 @@ body {
 
 .content {
     flex: 1;
-    width: min(1100px, 92%);
+    width: min(1180px, 94%);
     margin: 48px auto 64px;
     display: flex;
     flex-direction: column;
@@ -45,12 +45,14 @@ body {
 }
 
 .header-container {
-    width: min(1100px, 92%);
+    width: min(1180px, 94%);
     margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 16px 0;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 .logo {
@@ -61,11 +63,18 @@ body {
 }
 
 .nav-menu a {
-    margin-left: 20px;
+    margin-left: 0;
     font-size: 15px;
     color: var(--text);
     opacity: 0.85;
     transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.nav-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 18px;
+    margin-left: auto;
 }
 
 .nav-menu a:hover,
@@ -100,6 +109,7 @@ body {
     display: flex;
     gap: 12px;
     margin-top: 18px;
+    flex-wrap: wrap;
 }
 
 .btn {
@@ -228,7 +238,7 @@ body {
 }
 
 .footer-container {
-    width: min(1100px, 92%);
+    width: min(1180px, 94%);
     margin: 0 auto;
     color: var(--muted);
     font-size: 14px;
@@ -249,13 +259,34 @@ body {
     opacity: 0.75;
 }
 
+@media (max-width: 640px) {
+    .content {
+        margin: 32px auto 48px;
+        gap: 24px;
+    }
+
+    .hero {
+        padding: 24px;
+    }
+
+    .header-container {
+        justify-content: center;
+    }
+
+    .nav-menu {
+        justify-content: center;
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
 .footer-links a:hover,
 .footer-links a:focus-visible {
     opacity: 1;
     color: var(--accent-2);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .hero {
         grid-template-columns: 1fr;
     }
@@ -264,6 +295,10 @@ body {
     .content,
     .footer-container {
         width: 94%;
+    }
+
+    .hero {
+        gap: 20px;
     }
 }
 
@@ -382,21 +417,27 @@ body {
 }
 
 .match-row {
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+        'time status'
+        'home odds'
+        'away odds'
+        'action action';
     gap: 12px;
     padding: 12px 14px;
     border-bottom: 1px solid var(--border);
     background: #0f1322;
     transition: border 0.2s ease, background 0.2s ease;
+    align-items: center;
 }
 
 .match-row .time {
-    width: 70px;
     display: inline-flex;
     align-items: center;
     color: var(--muted);
+    grid-area: time;
+    min-width: 56px;
 }
 
 .match-row .home,
@@ -404,6 +445,14 @@ body {
     display: inline-flex;
     align-items: center;
     flex: 1;
+}
+
+.match-row .home {
+    grid-area: home;
+}
+
+.match-row .away {
+    grid-area: away;
 }
 
 .match-row:last-child {
@@ -454,6 +503,7 @@ body {
     align-items: center;
     gap: 8px;
     min-width: 90px;
+    grid-area: status;
 }
 
 .score {
@@ -464,10 +514,12 @@ body {
 }
 
 .odds-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
     gap: 8px;
     align-items: stretch;
     flex: 0 0 200px;
+    grid-area: odds;
 }
 
 .odd-cell {
@@ -488,7 +540,9 @@ body {
     display: inline-flex;
     justify-content: flex-end;
     flex: 0 0 90px;
-    margin-left: auto;
+    min-width: 90px;
+    margin-left: 0;
+    grid-area: action;
 }
 
 .odd-cell:hover,
@@ -544,47 +598,30 @@ body {
     font-size: 12px;
 }
 
-@media (max-width: 1000px) {
-    .match-row {
-        flex-wrap: wrap;
-        gap: 10px;
-        padding: 12px 12px;
-    }
-
-    .match-row .time {
-        width: 60px;
-    }
-
-    .match-row .home,
-    .match-row .away {
-        flex: 1 1 calc(50% - 12px);
-    }
-
-    .match-row .status {
-        order: 3;
-    }
-
-    .match-row .odds-row {
-        order: 4;
-        flex: 1 1 100%;
-    }
-
-    .match-row .match-action {
-        order: 5;
-        flex: 0 0 auto;
-        width: auto;
-    }
-
-    .matches-layout {
-        grid-template-columns: 1fr;
-    }
-
+@media (min-width: 641px) and (max-width: 1024px) {
     .filters-card {
         gap: 10px;
     }
 
     .filters-card input[type='search'] {
         margin-left: 0;
+    }
+
+    .matches-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .match-row {
+        grid-template-columns: 72px 1fr 1fr 0.9fr;
+        grid-template-areas:
+            'time home away action'
+            'status odds odds action';
+        align-items: center;
+        gap: 12px 14px;
+    }
+
+    .match-row .match-action {
+        justify-self: end;
     }
 }
 
@@ -594,28 +631,63 @@ body {
         align-items: stretch;
     }
 
+    .matches-layout {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
     .filters-card input[type='search'] {
         width: 100%;
         min-width: unset;
     }
 
     .match-row {
-        align-items: flex-start;
-    }
-
-    .match-row .time {
-        width: auto;
-    }
-
-    .match-row .home,
-    .match-row .away,
-    .match-row .status,
-    .match-row .odds-row,
-    .match-row .match-action {
-        flex: 1 1 100%;
+        align-items: start;
     }
 
     .match-row .match-action {
         justify-content: flex-start;
+    }
+}
+
+@media (min-width: 1025px) {
+    .matches-layout {
+        grid-template-columns: 1.8fr 1fr;
+    }
+
+    .match-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: 12px;
+        grid-template-areas: none;
+    }
+
+    .odds-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(90px, 1fr));
+        align-items: center;
+    }
+
+    .match-row .time {
+        width: 70px;
+    }
+
+    .match-row .home,
+    .match-row .away {
+        flex: 1;
+    }
+
+    .match-row .status {
+        order: 0;
+    }
+
+    .match-row .odds-row {
+        order: 0;
+        width: auto;
+    }
+
+    .match-row .match-action {
+        margin-left: auto;
     }
 }
