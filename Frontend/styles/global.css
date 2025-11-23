@@ -83,6 +83,14 @@ body {
     color: var(--accent);
 }
 
+.nav-menu .is-active {
+    color: var(--accent);
+    opacity: 1;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+}
+
 /* Hero */
 .hero {
     display: grid;
@@ -367,6 +375,13 @@ body {
     background: rgba(52, 232, 158, 0.08);
 }
 
+.filter-chip.is-active {
+    border-color: var(--accent);
+    background: rgba(52, 232, 158, 0.18);
+    color: var(--text);
+    box-shadow: 0 0 0 1px rgba(52, 232, 158, 0.32);
+}
+
 .filters-card select,
 .filters-card input[type='date'] {
     cursor: pointer;
@@ -613,6 +628,37 @@ body {
     }
 }
 
+@media (min-width: 1025px) {
+    .matches-layout {
+        grid-template-columns: 1.8fr 1fr;
+    }
+}
+
+@media (min-width: 641px) {
+    .match-row {
+        grid-template-columns: 72px 1.2fr 1.2fr 1.1fr 0.9fr;
+        grid-template-areas:
+            "time home away odds action"
+            "status odds odds odds action";
+        gap: 12px 16px;
+    }
+
+    .match-row .time {
+        min-width: 72px;
+    }
+
+    .match-row .match-action {
+        justify-self: end;
+        margin-left: 0;
+    }
+
+    .odds-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(90px, 1fr));
+        align-items: center;
+    }
+}
+
 @media (max-width: 640px) {
     .filters-card {
         flex-direction: column;
@@ -628,43 +674,12 @@ body {
         width: 100%;
         min-width: unset;
     }
-}
 
-@media (min-width: 641px) {
     .match-row {
-        grid-template-columns: 72px 1fr 1fr 0.9fr;
-        grid-template-areas:
-            'time home away action'
-            'status odds odds action';
-        align-items: center;
-        gap: 12px 14px;
+        align-items: start;
     }
 
     .match-row .match-action {
-        justify-content: flex-end;
-        justify-self: end;
-    }
-}
-
-@media (min-width: 1025px) {
-    .matches-layout {
-        grid-template-columns: 1.8fr 1fr;
-    }
-
-    .match-row {
-        grid-template-columns: 72px 1.2fr 1.2fr 1fr 1.05fr 0.8fr;
-        grid-template-areas: 'time home away status odds action';
-        align-items: center;
-        gap: 12px 14px;
-    }
-
-    .odds-row {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(90px, 1fr));
-        align-items: center;
-    }
-
-    .match-row .match-action {
-        justify-self: end;
+        justify-content: flex-start;
     }
 }
