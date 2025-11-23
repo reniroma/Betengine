@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BetEngine | Match details</title>
+
+    <script>
+        (function injectCacheBustedAssets() {
+            const now = new Date();
+            const version = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+
+            const withVersion = (path) => {
+                const url = new URL(path, window.location.href);
+                url.searchParams.set('v', version);
+                return `${url.pathname}${url.search}`;
+            };
+
+            const addStylesheet = (href) => {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = withVersion(href);
+                document.head.appendChild(link);
+            };
+
+            const addScript = (src) => {
+                const script = document.createElement('script');
+                script.src = withVersion(src);
+                script.defer = true;
+                document.head.appendChild(script);
+            };
+
+            window.__CACHE_BUST_VERSION__ = version;
+            addStylesheet('styles/reset.css');
+            addStylesheet('styles/global.css');
+            addScript('scripts/main.js');
+        })();
+    </script>
+</head>
+<body>
+    <div class="page">
+        <div id="header-placeholder"></div>
+
+        <main class="content" role="main">
+            <section class="page-hero">
+                <div>
+                    <p class="eyebrow">Match centre</p>
+                    <h1>Brighton vs Newcastle</h1>
+                    <p class="subtitle">Detailed fixture view styled with the shared BetEngine theme.</p>
+                    <div class="page-hero__meta">
+                        <span class="pill pill--accent">Kick-off 19:45</span>
+                        <span class="pill">Premier League · Round 34</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-card" aria-label="Match overview">
+                <h2>Overview</h2>
+                <div class="dual-columns">
+                    <article class="stat-card">
+                        <h3>Score</h3>
+                        <p class="value">2 – 1</p>
+                        <p class="subtitle">Latest update: 68'</p>
+                    </article>
+                    <article class="stat-card">
+                        <h3>Win probability</h3>
+                        <div class="meter-bar" aria-label="Home win probability"><span style="width: 62%"></span></div>
+                        <p class="subtitle">Home edge reflected using the theme palette.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section-card" aria-label="Match modules">
+                <h2>Match modules</h2>
+                <div class="tab-bar" role="tablist" aria-label="Match detail tabs">
+                    <button type="button" class="is-active" aria-selected="true">H2H</button>
+                    <button type="button" aria-selected="false">Odds</button>
+                    <button type="button" aria-selected="false">Live stats</button>
+                    <button type="button" aria-selected="false">Commentary</button>
+                    <button type="button" aria-selected="false">Timeline</button>
+                </div>
+                <div class="info-grid">
+                    <div class="info-tile">
+                        <p class="label">Last five</p>
+                        <p class="value">W W D L W</p>
+                    </div>
+                    <div class="info-tile">
+                        <p class="label">Expected goals</p>
+                        <p class="value">1.84 vs 1.21</p>
+                    </div>
+                    <div class="info-tile">
+                        <p class="label">Possession</p>
+                        <p class="value">56% vs 44%</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div id="footer-placeholder"></div>
+    </div>
+</body>
+</html>

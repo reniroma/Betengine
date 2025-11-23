@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BetEngine | Login / Register</title>
+
+    <script>
+        (function injectCacheBustedAssets() {
+            const now = new Date();
+            const version = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+
+            const withVersion = (path) => {
+                const url = new URL(path, window.location.href);
+                url.searchParams.set('v', version);
+                return `${url.pathname}${url.search}`;
+            };
+
+            const addStylesheet = (href) => {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = withVersion(href);
+                document.head.appendChild(link);
+            };
+
+            const addScript = (src) => {
+                const script = document.createElement('script');
+                script.src = withVersion(src);
+                script.defer = true;
+                document.head.appendChild(script);
+            };
+
+            window.__CACHE_BUST_VERSION__ = version;
+            addStylesheet('styles/reset.css');
+            addStylesheet('styles/global.css');
+            addScript('scripts/main.js');
+        })();
+    </script>
+</head>
+<body>
+    <div class="page">
+        <div id="header-placeholder"></div>
+
+        <main class="content" role="main">
+            <section class="page-hero">
+                <div>
+                    <p class="eyebrow">Access</p>
+                    <h1>Login / Register</h1>
+                    <p class="subtitle">Auth panels reuse the same spacing, borders, and accent styling.</p>
+                    <div class="page-hero__meta">
+                        <span class="pill pill--accent">Secure</span>
+                        <span class="pill">Theme-consistent forms</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-card" aria-label="Authentication form">
+                <h2>Sign in or create account</h2>
+                <div class="form-grid">
+                    <label>
+                        Email
+                        <input type="email" name="email" placeholder="you@example.com" />
+                    </label>
+                    <label>
+                        Password
+                        <input type="password" name="password" placeholder="••••••••" />
+                    </label>
+                    <label>
+                        Display name
+                        <input type="text" name="display" placeholder="Your nickname" />
+                    </label>
+                    <label>
+                        Favorite league
+                        <select name="league">
+                            <option>Premier League</option>
+                            <option>La Liga</option>
+                            <option>Serie A</option>
+                            <option>Bundesliga</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="hero__actions" style="margin-top:16px;">
+                    <button class="btn" type="button">Login</button>
+                    <button class="btn btn--secondary" type="button">Register</button>
+                </div>
+            </section>
+        </main>
+
+        <div id="footer-placeholder"></div>
+    </div>
+</body>
+</html>

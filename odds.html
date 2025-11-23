@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BetEngine | Odds tab</title>
+
+    <script>
+        (function injectCacheBustedAssets() {
+            const now = new Date();
+            const version = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+
+            const withVersion = (path) => {
+                const url = new URL(path, window.location.href);
+                url.searchParams.set('v', version);
+                return `${url.pathname}${url.search}`;
+            };
+
+            const addStylesheet = (href) => {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = withVersion(href);
+                document.head.appendChild(link);
+            };
+
+            const addScript = (src) => {
+                const script = document.createElement('script');
+                script.src = withVersion(src);
+                script.defer = true;
+                document.head.appendChild(script);
+            };
+
+            window.__CACHE_BUST_VERSION__ = version;
+            addStylesheet('styles/reset.css');
+            addStylesheet('styles/global.css');
+            addScript('scripts/main.js');
+        })();
+    </script>
+</head>
+<body>
+    <div class="page">
+        <div id="header-placeholder"></div>
+
+        <main class="content" role="main">
+            <section class="page-hero">
+                <div>
+                    <p class="eyebrow">Markets</p>
+                    <h1>Odds tab</h1>
+                    <p class="subtitle">Bet selections inherit the dark neon palette for consistency.</p>
+                    <div class="page-hero__meta">
+                        <span class="pill pill--accent">Decimal</span>
+                        <span class="pill">Line movement synced</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-card" aria-label="Odds table">
+                <h2>Primary lines</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Selection</th>
+                            <th scope="col">1</th>
+                            <th scope="col">X</th>
+                            <th scope="col">2</th>
+                            <th scope="col">O/U 2.5</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Brighton vs Newcastle</td>
+                            <td>1.95</td>
+                            <td>3.25</td>
+                            <td>3.80</td>
+                            <td>1.85 / 1.95</td>
+                        </tr>
+                        <tr>
+                            <td>Napoli vs Roma</td>
+                            <td>2.00</td>
+                            <td>3.05</td>
+                            <td>3.95</td>
+                            <td>1.90 / 1.90</td>
+                        </tr>
+                        <tr>
+                            <td>Chelsea vs Tottenham</td>
+                            <td>2.10</td>
+                            <td>3.10</td>
+                            <td>3.40</td>
+                            <td>2.05 / 1.78</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
+        <div id="footer-placeholder"></div>
+    </div>
+</body>
+</html>
