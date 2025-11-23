@@ -1,19 +1,45 @@
 /* Base layout */
 :root {
-    --bg: #0f1117;
-    --panel: #131725;
-    --muted: #9ea7b3;
-    --accent: #34e89e;
-    --accent-2: #72a6ff;
-    --text: #f5f7fb;
-    --border: #1f2432;
+    /* CORE DARK BACKGROUND */
+    --bg-primary: #0B0F16;
+    --bg-secondary: #121A25;
+    --bg-card: #0E1824;
+    --bg-card-alt: #0F202F;
+
+    /* TEXT */
+    --text-primary: #F2F5F9;
+    --text-secondary: #93A4B7;
+    --text-muted: #6C7A89;
+
+    /* NEON ACCENTS */
+    --accent-green: #00FF9A;
+    --accent-green-dark: #00cc7d;
+    --accent-blue: #008FFF;
+    --accent-purple: #7B61FF;
+
+    /* LINES / BORDERS */
+    --border-light: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.15);
+
+    /* SHADOWS / GLOWS */
+    --glow-green: 0 0 12px rgba(0, 255, 154, 0.45);
+    --glow-blue: 0 0 10px rgba(0, 143, 255, 0.35);
+
+    /* Legacy aliases */
+    --bg: var(--bg-primary);
+    --panel: var(--bg-card);
+    --muted: var(--text-muted);
+    --accent: var(--accent-green);
+    --accent-2: var(--accent-blue);
+    --text: var(--text-primary);
+    --border: var(--border-light);
 }
 
 body {
-    background: radial-gradient(circle at 20% 20%, rgba(114, 166, 255, 0.08), transparent 35%),
-                radial-gradient(circle at 80% 10%, rgba(52, 232, 158, 0.08), transparent 30%),
-                var(--bg);
-    color: var(--text);
+    background: radial-gradient(circle at 20% 20%, rgba(0, 143, 255, 0.10), transparent 35%),
+                radial-gradient(circle at 80% 10%, rgba(0, 255, 154, 0.10), transparent 30%),
+                var(--bg-primary);
+    color: var(--text-primary);
     font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
     line-height: 1.6;
 }
@@ -36,8 +62,8 @@ body {
 /* Header */
 .main-header {
     width: 100%;
-    background: rgba(12, 15, 24, 0.9);
-    border-bottom: 1px solid var(--border);
+    background: rgba(18, 26, 37, 0.9);
+    border-bottom: 1px solid var(--border-strong);
     position: sticky;
     top: 0;
     backdrop-filter: blur(8px);
@@ -96,8 +122,8 @@ body {
     display: grid;
     grid-template-columns: 1.1fr 0.9fr;
     gap: 28px;
-    background: linear-gradient(135deg, rgba(114, 166, 255, 0.08), rgba(52, 232, 158, 0.06));
-    border: 1px solid var(--border);
+    background: linear-gradient(135deg, rgba(0, 143, 255, 0.08), rgba(0, 255, 154, 0.06));
+    border: 1px solid var(--border-strong);
     border-radius: 18px;
     padding: 32px;
     box-shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
@@ -126,24 +152,24 @@ body {
     justify-content: center;
     padding: 12px 18px;
     border-radius: 12px;
-    background: linear-gradient(135deg, var(--accent), #21c58d);
-    color: #04150f;
+    background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
+    color: var(--bg-primary);
     font-weight: 700;
     border: none;
-    box-shadow: 0 8px 24px rgba(52, 232, 158, 0.35);
+    box-shadow: var(--glow-green);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn:hover,
 .btn:focus-visible {
     transform: translateY(-1px);
-    box-shadow: 0 12px 30px rgba(52, 232, 158, 0.45);
+    box-shadow: 0 12px 30px rgba(0, 255, 154, 0.45);
 }
 
 .btn--secondary {
     background: transparent;
     color: var(--text);
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-strong);
     box-shadow: none;
 }
 
@@ -173,7 +199,7 @@ body {
     padding: 12px;
     border-radius: 12px;
     border: 1px solid var(--border);
-    background: #111525;
+    background: var(--bg-card-alt);
 }
 
 .label {
@@ -198,13 +224,13 @@ body {
 }
 
 .badge--inplay {
-    background: rgba(114, 166, 255, 0.16);
-    color: #d6e5ff;
+    background: rgba(0, 143, 255, 0.16);
+    color: var(--text-primary);
 }
 
 .badge--upcoming {
-    background: rgba(52, 232, 158, 0.16);
-    color: #d8fff1;
+    background: rgba(0, 255, 154, 0.16);
+    color: var(--text-primary);
 }
 
 .eyebrow {
@@ -239,8 +265,8 @@ body {
 
 /* Footer */
 .main-footer {
-    border-top: 1px solid var(--border);
-    background: #0c0f18;
+    border-top: 1px solid var(--border-strong);
+    background: var(--bg-secondary);
     padding: 16px 0 18px;
     margin-top: auto;
 }
@@ -313,7 +339,7 @@ body {
 /* Matches page */
 .matches-intro {
     background: var(--panel);
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-strong);
     border-radius: 16px;
     padding: 24px;
     box-shadow: 0 10px 26px rgba(0, 0, 0, 0.26);
@@ -329,8 +355,8 @@ body {
 }
 
 .filters-card {
-    background: #0e1221;
-    border: 1px solid var(--border);
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border-strong);
     border-radius: 16px;
     padding: 14px 16px;
     display: flex;
@@ -372,14 +398,14 @@ body {
 .filter-chip:hover,
 .filter-chip:focus-visible {
     border-color: var(--accent);
-    background: rgba(52, 232, 158, 0.08);
+    background: rgba(0, 255, 154, 0.08);
 }
 
 .filter-chip.is-active {
     border-color: var(--accent);
-    background: rgba(52, 232, 158, 0.18);
+    background: rgba(0, 255, 154, 0.18);
     color: var(--text);
-    box-shadow: 0 0 0 1px rgba(52, 232, 158, 0.32);
+    box-shadow: 0 0 0 1px rgba(0, 255, 154, 0.32);
 }
 
 .filters-card select,
@@ -444,7 +470,7 @@ body {
     gap: 10px;
     padding: 12px 14px;
     border-bottom: 1px solid var(--border);
-    background: #0f1322;
+    background: var(--bg-card);
     transition: border 0.2s ease, background 0.2s ease;
     align-items: center;
 }
@@ -478,7 +504,7 @@ body {
 
 .match-row.live {
     border-left: 3px solid var(--accent);
-    background: rgba(52, 232, 158, 0.06);
+    background: rgba(0, 255, 154, 0.06);
 }
 
 .match-row.finished {
@@ -508,7 +534,7 @@ body {
 .status-badge.live {
     color: var(--accent);
     border-color: var(--accent);
-    background: rgba(52, 232, 158, 0.08);
+    background: rgba(0, 255, 154, 0.08);
 }
 
 .status-badge.finished {
@@ -606,8 +632,8 @@ body {
 .widget .pill {
     padding: 6px 10px;
     border-radius: 999px;
-    background: rgba(114, 166, 255, 0.12);
-    color: #d8e6ff;
+    background: rgba(0, 143, 255, 0.12);
+    color: var(--text-primary);
     font-size: 12px;
 }
 
