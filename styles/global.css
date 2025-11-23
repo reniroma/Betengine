@@ -708,7 +708,7 @@ body {
 
 .match-row {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
         'time'
         'status'
@@ -811,6 +811,7 @@ body {
     gap: 8px;
     align-items: stretch;
     grid-area: odds;
+    width: 100%;
 }
 
 .odd-cell {
@@ -896,15 +897,15 @@ body {
     }
 
     .matches-layout {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .match-row {
-        grid-template-columns: 80px 1.2fr 1.2fr 1fr 110px;
+        grid-template-columns: 78px minmax(0, 1.35fr) minmax(0, 1.35fr) minmax(0, 1fr) 118px;
         grid-template-areas:
             "time home away odds action"
             "status home away odds action";
-        gap: 12px 16px;
+        gap: 14px 18px;
         align-items: center;
     }
 
@@ -919,13 +920,13 @@ body {
 
 @media (min-width: 1025px) {
     .matches-layout {
-        grid-template-columns: 1.8fr 1fr;
+        grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr);
     }
 
     .match-row {
-        grid-template-columns: 86px 1.25fr 1.25fr 0.9fr 1.15fr 120px;
+        grid-template-columns: 84px minmax(0, 1.25fr) minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 1.05fr) 124px;
         grid-template-areas: "time home away status odds action";
-        gap: 12px 18px;
+        gap: 14px 20px;
         align-items: center;
     }
 
