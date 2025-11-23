@@ -1,44 +1,38 @@
 /* Base layout */
 :root {
     /* CORE DARK BACKGROUND */
-    --bg-primary: #0B0F16;
-    --bg-secondary: #121A25;
-    --bg-card: #0E1824;
-    --bg-card-alt: #0F202F;
+    --bg-primary: #0D0A14;
+    --bg-secondary: #14101F;
+    --bg-card: #191626;
+    --bg-card-alt: #211D30;
 
     /* TEXT */
-    --text-primary: #F2F5F9;
-    --text-secondary: #93A4B7;
-    --text-muted: #6C7A89;
+    --text-primary: #F7F3FF;
+    --text-secondary: #CFC6DD;
+    --text-muted: #A79BBC;
 
-    /* NEON ACCENTS */
-    --accent-green: #00FF9A;
-    --accent-green-dark: #00cc7d;
-    --accent-blue: #008FFF;
-    --accent-purple: #7B61FF;
+    /* PREMIUM ACCENTS */
+    --brand-gold: #F6C65B;
+    --brand-rose: #E08ABD;
 
     /* LINES / BORDERS */
-    --border-light: rgba(255, 255, 255, 0.08);
-    --border-strong: rgba(255, 255, 255, 0.15);
+    --border-light: rgba(255, 255, 255, 0.07);
+    --border-strong: rgba(255, 255, 255, 0.14);
 
-    /* SHADOWS / GLOWS */
-    --glow-green: 0 0 12px rgba(0, 255, 154, 0.45);
-    --glow-blue: 0 0 10px rgba(0, 143, 255, 0.35);
+    /* DEPTH */
+    --shadow-soft: 0 14px 34px rgba(0, 0, 0, 0.38);
+    --shadow-strong: 0 18px 52px rgba(0, 0, 0, 0.44);
 
     /* Legacy aliases */
     --bg: var(--bg-primary);
     --panel: var(--bg-card);
     --muted: var(--text-muted);
-    --accent: var(--accent-green);
-    --accent-2: var(--accent-blue);
     --text: var(--text-primary);
     --border: var(--border-light);
 }
 
 body {
-    background: radial-gradient(circle at 20% 20%, rgba(0, 143, 255, 0.10), transparent 35%),
-                radial-gradient(circle at 80% 10%, rgba(0, 255, 154, 0.10), transparent 30%),
-                var(--bg-primary);
+    background: var(--bg-primary);
     color: var(--text-primary);
     font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
     line-height: 1.6;
@@ -62,7 +56,7 @@ body {
 /* Header */
 .main-header {
     width: 100%;
-    background: rgba(18, 26, 37, 0.9);
+    background: rgba(20, 16, 31, 0.92);
     border-bottom: 1px solid var(--border-strong);
     position: sticky;
     top: 0;
@@ -85,7 +79,7 @@ body {
     font-size: 22px;
     font-weight: 700;
     letter-spacing: 0.4px;
-    color: var(--accent);
+    color: var(--brand-gold);
 }
 
 .nav-menu a {
@@ -106,11 +100,11 @@ body {
 .nav-menu a:hover,
 .nav-menu a:focus-visible {
     opacity: 1;
-    color: var(--accent);
+    color: var(--brand-gold);
 }
 
 .nav-menu .is-active {
-    color: var(--accent);
+    color: var(--brand-gold);
     opacity: 1;
     text-decoration: underline;
     text-decoration-thickness: 2px;
@@ -122,11 +116,11 @@ body {
     display: grid;
     grid-template-columns: 1.1fr 0.9fr;
     gap: 28px;
-    background: linear-gradient(135deg, rgba(0, 143, 255, 0.08), rgba(0, 255, 154, 0.06));
+    background: var(--bg-card-alt);
     border: 1px solid var(--border-strong);
     border-radius: 18px;
     padding: 32px;
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+    box-shadow: var(--shadow-strong);
 }
 
 .hero__text h1 {
@@ -152,18 +146,19 @@ body {
     justify-content: center;
     padding: 12px 18px;
     border-radius: 12px;
-    background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
+    background: var(--brand-gold);
     color: var(--bg-primary);
     font-weight: 700;
     border: none;
-    box-shadow: var(--glow-green);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
 .btn:hover,
 .btn:focus-visible {
     transform: translateY(-1px);
-    box-shadow: 0 12px 30px rgba(0, 255, 154, 0.45);
+    box-shadow: var(--shadow-strong);
+    filter: brightness(1.05);
 }
 
 .btn--secondary {
@@ -224,12 +219,12 @@ body {
 }
 
 .badge--inplay {
-    background: rgba(0, 143, 255, 0.16);
+    background: rgba(224, 138, 189, 0.18);
     color: var(--text-primary);
 }
 
 .badge--upcoming {
-    background: rgba(0, 255, 154, 0.16);
+    background: rgba(246, 198, 91, 0.22);
     color: var(--text-primary);
 }
 
@@ -252,7 +247,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 14px;
     padding: 18px;
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+    box-shadow: var(--shadow-soft);
 }
 
 .feature h3 {
@@ -317,7 +312,7 @@ body {
 .footer-links a:hover,
 .footer-links a:focus-visible {
     opacity: 1;
-    color: var(--accent-2);
+    color: var(--brand-rose);
 }
 
 @media (max-width: 1024px) {
@@ -342,7 +337,7 @@ body {
     border: 1px solid var(--border-strong);
     border-radius: 16px;
     padding: 24px;
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.26);
+    box-shadow: var(--shadow-strong);
 }
 
 .matches-intro h1 {
@@ -363,7 +358,7 @@ body {
     flex-wrap: wrap;
     gap: 12px;
     align-items: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+    box-shadow: var(--shadow-strong);
 }
 
 .filter-group {
@@ -397,15 +392,15 @@ body {
 
 .filter-chip:hover,
 .filter-chip:focus-visible {
-    border-color: var(--accent);
-    background: rgba(0, 255, 154, 0.08);
+    border-color: var(--brand-gold);
+    background: rgba(246, 198, 91, 0.14);
 }
 
 .filter-chip.is-active {
-    border-color: var(--accent);
-    background: rgba(0, 255, 154, 0.18);
+    border-color: var(--brand-gold);
+    background: rgba(246, 198, 91, 0.22);
     color: var(--text);
-    box-shadow: 0 0 0 1px rgba(0, 255, 154, 0.32);
+    box-shadow: 0 0 0 1px rgba(246, 198, 91, 0.36);
 }
 
 .filters-card select,
@@ -436,7 +431,7 @@ body {
     border-radius: 14px;
     overflow: hidden;
     background: var(--panel);
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
+    box-shadow: var(--shadow-soft);
 }
 
 .league-header {
@@ -503,8 +498,8 @@ body {
 }
 
 .match-row.live {
-    border-left: 3px solid var(--accent);
-    background: rgba(0, 255, 154, 0.06);
+    border-left: 3px solid var(--brand-gold);
+    background: rgba(246, 198, 91, 0.08);
 }
 
 .match-row.finished {
@@ -532,9 +527,9 @@ body {
 }
 
 .status-badge.live {
-    color: var(--accent);
-    border-color: var(--accent);
-    background: rgba(0, 255, 154, 0.08);
+    color: var(--brand-gold);
+    border-color: var(--brand-gold);
+    background: rgba(246, 198, 91, 0.16);
 }
 
 .status-badge.finished {
@@ -586,7 +581,7 @@ body {
 
 .odd-cell:hover,
 .odd-cell:focus-visible {
-    border-color: var(--accent-2);
+    border-color: var(--brand-rose);
     transform: translateY(-1px);
 }
 
@@ -595,7 +590,7 @@ body {
 }
 
 .match-action a {
-    color: var(--accent-2);
+    color: var(--brand-rose);
     font-weight: 600;
 }
 
@@ -610,7 +605,7 @@ body {
     border-radius: 14px;
     background: var(--panel);
     padding: 16px;
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
+    box-shadow: var(--shadow-soft);
 }
 
 .widget h4 {
@@ -632,7 +627,7 @@ body {
 .widget .pill {
     padding: 6px 10px;
     border-radius: 999px;
-    background: rgba(0, 143, 255, 0.12);
+    background: rgba(224, 138, 189, 0.2);
     color: var(--text-primary);
     font-size: 12px;
 }
