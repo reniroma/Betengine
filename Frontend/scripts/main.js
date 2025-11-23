@@ -20,8 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="header-container">
                 <h1 class="logo">BetEngine</h1>
                 <nav class="nav-menu">
-                    <a href="#">Home</a>
-                    <a href="#">Matches</a>
+                    <a href="index.html">Home</a>
+                    <a href="matches.html">Matches</a>
                     <a href="#">Leagues</a>
                     <a href="#">Stats</a>
                 </nav>
