@@ -1,1 +1,26 @@
+/* === HEADER / NAVBAR === */
+.main-header {
+  width: 100%;
+  padding: 20px;
+  background: #181818;
+  border-bottom: 1px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #00e676;
+}
+
+.nav-links a {
+  margin-left: 25px;
+  color: #ccc;
+  font-size: 16px;
+}
+
+.nav-links a:hover {
+  color: #00e676;
+}
