@@ -1,5 +1,12 @@
-/* --- HEADER STYLES --- */
+/* --- GLOBAL BODY STYLES --- */
+body {
+    background: #111;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    line-height: 1.4;
+}
 
+/* --- HEADER STYLES --- */
 .main-header {
     width: 100%;
     background: #181818;
