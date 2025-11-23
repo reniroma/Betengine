@@ -444,7 +444,7 @@ body {
     border-bottom: 1px solid var(--border);
     background: #0f1322;
     transition: border 0.2s ease, background 0.2s ease;
-    align-items: center;
+    align-items: start;
 }
 
 .match-row .time {
@@ -460,6 +460,7 @@ body {
     display: inline-flex;
     align-items: center;
     flex: 1;
+    min-width: 0;
 }
 
 .match-row .home {
@@ -553,7 +554,7 @@ body {
 
 .match-row .match-action {
     display: inline-flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     flex: 0 0 90px;
     min-width: 90px;
     margin-left: 0;
@@ -625,26 +626,15 @@ body {
     .matches-layout {
         grid-template-columns: 1fr;
     }
-
-    .match-row {
-        grid-template-columns: 72px 1fr 1fr 0.9fr;
-        grid-template-areas:
-            'time home away action'
-            'status odds odds action';
-        align-items: center;
-        gap: 12px 14px;
-    }
-
-    .match-row .match-action {
-        justify-self: end;
-    }
 }
 
 @media (min-width: 1025px) {
     .matches-layout {
         grid-template-columns: 1.8fr 1fr;
     }
+}
 
+@media (min-width: 641px) {
     .match-row {
         grid-template-columns: 72px 1.2fr 1.2fr 1.1fr 0.9fr;
         grid-template-areas:
