@@ -418,14 +418,18 @@ body {
 
 .match-row {
     display: grid;
-    grid-template-columns: 72px 1.2fr 1.2fr 1fr 1.05fr 0.8fr;
-    grid-template-areas: 'time home away status odds action';
-    gap: 12px 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+        'time status'
+        'home odds'
+        'away odds'
+        'action action';
+    gap: 12px;
     padding: 12px 14px;
     border-bottom: 1px solid var(--border);
     background: #0f1322;
     transition: border 0.2s ease, background 0.2s ease;
-    align-items: center;
+    align-items: start;
 }
 
 .match-row .time {
@@ -535,7 +539,7 @@ body {
 
 .match-row .match-action {
     display: inline-flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     flex: 0 0 90px;
     min-width: 90px;
     margin-left: 0;
@@ -607,19 +611,6 @@ body {
     .matches-layout {
         grid-template-columns: 1fr;
     }
-
-    .match-row {
-        grid-template-columns: 72px 1fr 1fr 0.9fr;
-        grid-template-areas:
-            'time home away action'
-            'status odds odds action';
-        align-items: center;
-        gap: 12px 14px;
-    }
-
-    .match-row .match-action {
-        justify-self: end;
-    }
 }
 
 @media (max-width: 640px) {
@@ -637,20 +628,21 @@ body {
         width: 100%;
         min-width: unset;
     }
+}
 
+@media (min-width: 641px) {
     .match-row {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: 72px 1fr 1fr 0.9fr;
         grid-template-areas:
-            'time status'
-            'home odds'
-            'away odds'
-            'action action';
-        align-items: start;
-        gap: 12px;
+            'time home away action'
+            'status odds odds action';
+        align-items: center;
+        gap: 12px 14px;
     }
 
     .match-row .match-action {
-        justify-content: flex-start;
+        justify-content: flex-end;
+        justify-self: end;
     }
 }
 
