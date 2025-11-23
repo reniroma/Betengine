@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BetEngine | Commentary</title>
+
+    <script>
+        (function injectCacheBustedAssets() {
+            const now = new Date();
+            const version = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+
+            const withVersion = (path) => {
+                const url = new URL(path, window.location.href);
+                url.searchParams.set('v', version);
+                return `${url.pathname}${url.search}`;
+            };
+
+            const addStylesheet = (href) => {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = withVersion(href);
+                document.head.appendChild(link);
+            };
+
+            const addScript = (src) => {
+                const script = document.createElement('script');
+                script.src = withVersion(src);
+                script.defer = true;
+                document.head.appendChild(script);
+            };
+
+            window.__CACHE_BUST_VERSION__ = version;
+            addStylesheet('styles/reset.css');
+            addStylesheet('styles/global.css');
+            addScript('scripts/main.js');
+        })();
+    </script>
+</head>
+<body>
+    <div class="page">
+        <div id="header-placeholder"></div>
+
+        <main class="content" role="main">
+            <section class="page-hero">
+                <div>
+                    <p class="eyebrow">Text feed</p>
+                    <h1>Commentary</h1>
+                    <p class="subtitle">Play-by-play updates styled with the unified dark neon theme.</p>
+                    <div class="page-hero__meta">
+                        <span class="pill pill--accent">Live</span>
+                        <span class="pill">Auto-refresh</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-card" aria-label="Commentary feed">
+                <h2>Latest moments</h2>
+                <ul class="timeline" aria-label="Commentary items">
+                    <li class="timeline__item"><span class="timeline__time">68'</span><div class="timeline__detail"><strong>Goal! </strong><span class="subtitle">Brighton go ahead from a set piece.</span></div></li>
+                    <li class="timeline__item"><span class="timeline__time">61'</span><div class="timeline__detail"><strong>Yellow card</strong><span class="subtitle">Midfield foul slows the break.</span></div></li>
+                    <li class="timeline__item"><span class="timeline__time">54'</span><div class="timeline__detail"><strong>Chance</strong><span class="subtitle">Newcastle shot saved at near post.</span></div></li>
+                </ul>
+            </section>
+        </main>
+
+        <div id="footer-placeholder"></div>
+    </div>
+</body>
+</html>

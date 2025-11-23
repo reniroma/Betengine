@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BetEngine | H2H</title>
+
+    <script>
+        (function injectCacheBustedAssets() {
+            const now = new Date();
+            const version = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+
+            const withVersion = (path) => {
+                const url = new URL(path, window.location.href);
+                url.searchParams.set('v', version);
+                return `${url.pathname}${url.search}`;
+            };
+
+            const addStylesheet = (href) => {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = withVersion(href);
+                document.head.appendChild(link);
+            };
+
+            const addScript = (src) => {
+                const script = document.createElement('script');
+                script.src = withVersion(src);
+                script.defer = true;
+                document.head.appendChild(script);
+            };
+
+            window.__CACHE_BUST_VERSION__ = version;
+            addStylesheet('styles/reset.css');
+            addStylesheet('styles/global.css');
+            addScript('scripts/main.js');
+        })();
+    </script>
+</head>
+<body>
+    <div class="page">
+        <div id="header-placeholder"></div>
+
+        <main class="content" role="main">
+            <section class="page-hero">
+                <div>
+                    <p class="eyebrow">Head to head</p>
+                    <h1>Napoli vs Roma</h1>
+                    <p class="subtitle">Historic meetings and trends rendered with the refreshed styling.</p>
+                    <div class="page-hero__meta">
+                        <span class="pill pill--accent">Last 5: Napoli 3W</span>
+                        <span class="pill">Serie A rivalry</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-card" aria-label="Record summary">
+                <h2>Recent meetings</h2>
+                <div class="info-grid">
+                    <div class="info-tile">
+                        <p class="label">Wins</p>
+                        <p class="value">Napoli 3 · Roma 1</p>
+                    </div>
+                    <div class="info-tile">
+                        <p class="label">Goals</p>
+                        <p class="value">9 vs 6</p>
+                    </div>
+                    <div class="info-tile">
+                        <p class="label">Average corners</p>
+                        <p class="value">10.2</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-card" aria-label="Meeting list">
+                <h2>Match list</h2>
+                <ul class="timeline" aria-label="Previous head to head fixtures">
+                    <li class="timeline__item"><span class="timeline__time">Mar 2025</span><div class="timeline__detail"><strong>Napoli 2 - 1 Roma</strong><span class="subtitle">Series winner, possession-led</span></div></li>
+                    <li class="timeline__item"><span class="timeline__time">Nov 2024</span><div class="timeline__detail"><strong>Roma 1 - 0 Napoli</strong><span class="subtitle">Low xG, tight defense</span></div></li>
+                    <li class="timeline__item"><span class="timeline__time">May 2024</span><div class="timeline__detail"><strong>Napoli 3 - 2 Roma</strong><span class="subtitle">Open play, late winner</span></div></li>
+                </ul>
+            </section>
+        </main>
+
+        <div id="footer-placeholder"></div>
+    </div>
+</body>
+</html>

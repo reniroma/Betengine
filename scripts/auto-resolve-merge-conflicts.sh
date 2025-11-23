@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MODE="theirs"
-if [[ "${1-}" == "--ours" ]]; then
-  MODE="ours"
+# Default to keeping the current branch (Codex-generated) changes.
+MODE="ours"
+if [[ "${1-}" == "--theirs" ]]; then
+  MODE="theirs"
   shift
 fi
 
