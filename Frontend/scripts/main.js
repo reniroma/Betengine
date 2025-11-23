@@ -1,16 +1,52 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const loadComponent = (placeholderId, path, fallback = '') => {
+    const loadComponent = (placeholderId, path, fallback = '', onLoad = null) => {
         const target = document.getElementById(placeholderId);
         if (!target) return;
 
+        const setMarkup = (markup) => {
+            target.innerHTML = markup;
+            if (typeof onLoad === 'function') {
+                onLoad(target);
+            }
+        };
+
         fetch(path)
             .then((res) => (res.ok ? res.text() : Promise.reject()))
-            .then((markup) => {
-                target.innerHTML = markup;
-            })
+            .then(setMarkup)
             .catch(() => {
-                target.innerHTML = fallback;
+                setMarkup(fallback);
             });
+    };
+
+    const highlightActiveNav = (container) => {
+        const currentPage = location.pathname.split('/').pop() || 'index.html';
+        const links = container.querySelectorAll('a[href]');
+        links.forEach((link) => {
+            const href = link.getAttribute('href');
+            if (href && currentPage.endsWith(href)) {
+                link.classList.add('is-active');
+            }
+        });
+    };
+
+    const enhanceFilterChips = () => {
+        const chips = document.querySelectorAll('.filter-chip');
+        if (!chips.length) return;
+
+        const setActive = (chip) => {
+            chips.forEach((c) => c.classList.remove('is-active'));
+            chip.classList.add('is-active');
+        };
+
+        chips.forEach((chip) => {
+            chip.addEventListener('click', () => setActive(chip));
+            chip.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    setActive(chip);
+                }
+            });
+        });
     };
 
     loadComponent(
@@ -26,7 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <a href="#">Stats</a>
                 </nav>
             </div>
-        </header>`
+        </header>`,
+        highlightActiveNav
     );
 
     loadComponent(
@@ -43,4 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         </footer>`
     );
+
+    enhanceFilterChips();
 });
