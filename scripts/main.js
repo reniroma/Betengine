@@ -65,8 +65,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 <nav class="nav-menu">
                     <a href="index.html">Home</a>
                     <a href="matches.html">Matches</a>
-                    <a href="#">Leagues</a>
-                    <a href="#">Stats</a>
+                    <a href="leagues.html">Leagues</a>
+                    <a href="match-details.html">Match details</a>
+                    <a href="team.html">Team page</a>
+                    <a href="h2h.html">H2H</a>
+                    <a href="odds.html">Odds tab</a>
+                    <a href="live-stats.html">Live stats</a>
+                    <a href="commentary.html">Commentary</a>
+                    <a href="timeline.html">Timeline</a>
+                    <a href="auth.html">Login/Register</a>
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="widgets.html">Widgets</a>
                 </nav>
             </div>
         </header>`,
