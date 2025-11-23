@@ -588,3 +588,19 @@ body {
         text-align: left;
     }
 }
+
+.match-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 0 !important;
+}
+
+.match-row .teams,
+.match-row .time,
+.match-row .status,
+.match-row .score,
+.match-row .odds,
+.match-row .actions {
+    display: flex;
+    align-items: center;
+}
