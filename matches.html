@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BetEngine | Matches</title>
+
+    <link rel="stylesheet" href="Frontend/styles/reset.css" />
+    <link rel="stylesheet" href="Frontend/styles/global.css" />
+</head>
+<body>
+    <div class="page">
+        <div id="header-placeholder"></div>
+
+        <main class="content" role="main">
+            <section class="matches-intro">
+                <p class="eyebrow">Fixture hub</p>
+                <h1>Matches today</h1>
+                <p class="subtitle">Filter fixtures, follow live games, and compare odds at a glance.</p>
+            </section>
+
+            <section class="filters-card" aria-label="Match filters">
+                <div class="filter-group" aria-label="Quick dates">
+                    <span class="filter-chip" role="button" tabindex="0">Today</span>
+                    <span class="filter-chip" role="button" tabindex="0">Tomorrow</span>
+                    <input type="date" aria-label="Choose date" />
+                </div>
+
+                <div class="filter-group">
+                    <label for="sport">Sport</label>
+                    <select id="sport" name="sport">
+                        <option>Football</option>
+                        <option>Basketball</option>
+                        <option>Tennis</option>
+                        <option>Hockey</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="country">Country</label>
+                    <select id="country" name="country">
+                        <option>England</option>
+                        <option>Spain</option>
+                        <option>Italy</option>
+                        <option>USA</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="league">League</label>
+                    <select id="league" name="league">
+                        <option>All leagues</option>
+                        <option>Premier League</option>
+                        <option>La Liga</option>
+                        <option>Serie A</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="odds-format">Odds</label>
+                    <select id="odds-format" name="odds-format">
+                        <option>Decimal</option>
+                        <option>Fractional</option>
+                        <option>American</option>
+                    </select>
+                </div>
+
+                <input type="search" placeholder="Search team or league…" aria-label="Search team or league" />
+            </section>
+
+            <section class="matches-layout">
+                <div class="matches-list">
+                    <article class="league-card">
+                        <div class="league-header">
+                            <h3>Premier League · England</h3>
+                            <span class="label">Round 34</span>
+                        </div>
+                        <div class="match-row live">
+                            <div class="time">19:45</div>
+                            <div class="home team-name">Brighton</div>
+                            <div class="away team-name">Newcastle</div>
+                            <div class="status"><span class="status-badge live">LIVE</span> <span class="score">2 – 1</span></div>
+                            <div class="odds-row">
+                                <button class="odd-cell" type="button">1.95</button>
+                                <button class="odd-cell" type="button">3.25</button>
+                                <button class="odd-cell" type="button">3.80</button>
+                            </div>
+                            <div class="match-action"><a href="#">Details</a></div>
+                        </div>
+                        <div class="match-row">
+                            <div class="time">21:00</div>
+                            <div class="home team-name">Chelsea</div>
+                            <div class="away team-name">Tottenham</div>
+                            <div class="status"><span class="status-badge">—</span> <span class="score">&nbsp;</span></div>
+                            <div class="odds-row">
+                                <button class="odd-cell" type="button">2.10</button>
+                                <button class="odd-cell" type="button">3.10</button>
+                                <button class="odd-cell" type="button">3.40</button>
+                            </div>
+                            <div class="match-action"><a href="#">Details</a></div>
+                        </div>
+                        <div class="match-row finished">
+                            <div class="time">FT</div>
+                            <div class="home team-name">Brentford</div>
+                            <div class="away team-name">Fulham</div>
+                            <div class="status"><span class="status-badge finished">FT</span> <span class="score">0 – 0</span></div>
+                            <div class="odds-row">
+                                <button class="odd-cell" type="button">2.30</button>
+                                <button class="odd-cell" type="button">3.00</button>
+                                <button class="odd-cell" type="button">3.20</button>
+                            </div>
+                            <div class="match-action"><a href="#">Details</a></div>
+                        </div>
+                    </article>
+
+                    <article class="league-card">
+                        <div class="league-header">
+                            <h3>Serie A · Italy</h3>
+                            <span class="label">Matchday 32</span>
+                        </div>
+                        <div class="match-row live">
+                            <div class="time">18:00</div>
+                            <div class="home team-name">Napoli</div>
+                            <div class="away team-name">Roma</div>
+                            <div class="status"><span class="status-badge live">LIVE</span> <span class="score">1 – 1</span></div>
+                            <div class="odds-row">
+                                <button class="odd-cell" type="button">2.00</button>
+                                <button class="odd-cell" type="button">3.05</button>
+                                <button class="odd-cell" type="button">3.95</button>
+                            </div>
+                            <div class="match-action"><a href="#">Details</a></div>
+                        </div>
+                        <div class="match-row">
+                            <div class="time">20:45</div>
+                            <div class="home team-name">Inter</div>
+                            <div class="away team-name">Lazio</div>
+                            <div class="status"><span class="status-badge">—</span> <span class="score">&nbsp;</span></div>
+                            <div class="odds-row">
+                                <button class="odd-cell" type="button">1.70</button>
+                                <button class="odd-cell" type="button">3.60</button>
+                                <button class="odd-cell" type="button">5.00</button>
+                            </div>
+                            <div class="match-action"><a href="#">Details</a></div>
+                        </div>
+                        <div class="match-row finished">
+                            <div class="time">FT</div>
+                            <div class="home team-name">Atalanta</div>
+                            <div class="away team-name">Torino</div>
+                            <div class="status"><span class="status-badge finished">FT</span> <span class="score">3 – 2</span></div>
+                            <div class="odds-row">
+                                <button class="odd-cell" type="button">2.45</button>
+                                <button class="odd-cell" type="button">3.10</button>
+                                <button class="odd-cell" type="button">2.95</button>
+                            </div>
+                            <div class="match-action"><a href="#">Details</a></div>
+                        </div>
+                    </article>
+                </div>
+
+                <aside class="side-widgets" aria-label="Match insights">
+                    <div class="widget">
+                        <h4>Trending picks</h4>
+                        <ul>
+                            <li><span>Inter vs Lazio</span><span class="pill">High confidence</span></li>
+                            <li><span>Brighton to score</span><span class="pill">Live boost</span></li>
+                            <li><span>Roma +1.5 handicap</span><span class="pill">Value</span></li>
+                            <li><span>Napoli possession</span><span class="pill">Tracking</span></li>
+                        </ul>
+                    </div>
+                    <div class="widget">
+                        <h4>Live stats preview</h4>
+                        <p class="subtitle">Expect high press intensity from Napoli and Roma with 14 shots combined in the first half.</p>
+                        <p class="subtitle">Inter enter with a six-game unbeaten run; Lazio average 5.8 corners away.</p>
+                    </div>
+                </aside>
+            </section>
+        </main>
+
+        <div id="footer-placeholder"></div>
+    </div>
+
+    <script src="Frontend/scripts/main.js" defer></script>
+</body>
+</html>

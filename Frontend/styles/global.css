@@ -266,3 +266,325 @@ body {
         width: 94%;
     }
 }
+
+/* Matches page */
+.matches-intro {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.26);
+}
+
+.matches-intro h1 {
+    font-size: clamp(26px, 3.6vw, 34px);
+    margin-bottom: 8px;
+}
+
+.matches-intro .subtitle {
+    color: var(--muted);
+}
+
+.filters-card {
+    background: #0e1221;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-group label {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.filter-chip,
+.filters-card select,
+.filters-card input[type='date'],
+.filters-card input[type='search'] {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 14px;
+    min-width: 110px;
+}
+
+.filter-chip {
+    cursor: pointer;
+    transition: border 0.2s ease, background 0.2s ease;
+}
+
+.filter-chip:hover,
+.filter-chip:focus-visible {
+    border-color: var(--accent);
+    background: rgba(52, 232, 158, 0.08);
+}
+
+.filters-card select,
+.filters-card input[type='date'] {
+    cursor: pointer;
+}
+
+.filters-card input[type='search'] {
+    margin-left: auto;
+    flex: 1;
+    min-width: 180px;
+}
+
+.matches-layout {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr;
+    gap: 18px;
+}
+
+.matches-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.league-card {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--panel);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
+}
+
+.league-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid var(--border);
+}
+
+.league-header h3 {
+    font-size: 15px;
+    letter-spacing: 0.01em;
+}
+
+.league-header .label {
+    color: var(--muted);
+}
+
+.match-row {
+    display: grid;
+    grid-template-columns: 70px 1.1fr 1.1fr 90px 200px 90px;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    background: #0f1322;
+    transition: border 0.2s ease, background 0.2s ease;
+}
+
+.match-row:last-child {
+    border-bottom: none;
+}
+
+.match-row.live {
+    border-left: 3px solid var(--accent);
+    background: rgba(52, 232, 158, 0.06);
+}
+
+.match-row.finished {
+    opacity: 0.8;
+}
+
+.match-row:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.team-name {
+    font-weight: 600;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    font-size: 12px;
+    min-width: 58px;
+    text-align: center;
+}
+
+.status-badge.live {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(52, 232, 158, 0.08);
+}
+
+.status-badge.finished {
+    color: var(--muted);
+}
+
+.score {
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.odds-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.odd-cell {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    text-align: center;
+    font-weight: 700;
+    transition: border 0.2s ease, transform 0.2s ease;
+}
+
+.odd-cell:hover,
+.odd-cell:focus-visible {
+    border-color: var(--accent-2);
+    transform: translateY(-1px);
+}
+
+.match-action {
+    text-align: right;
+}
+
+.match-action a {
+    color: var(--accent-2);
+    font-weight: 600;
+}
+
+.side-widgets {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.widget {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel);
+    padding: 16px;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
+}
+
+.widget h4 {
+    margin-bottom: 10px;
+}
+
+.widget ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.widget li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.widget .pill {
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(114, 166, 255, 0.12);
+    color: #d8e6ff;
+    font-size: 12px;
+}
+
+@media (max-width: 1000px) {
+    .match-row {
+        grid-template-columns: 60px 1fr 1fr;
+        grid-template-areas:
+            'time home action'
+            'time away action'
+            'status status status'
+            'odds odds odds';
+    }
+
+    .match-row .time {
+        grid-area: time;
+    }
+
+    .match-row .home {
+        grid-area: home;
+    }
+
+    .match-row .away {
+        grid-area: away;
+    }
+
+    .match-row .status {
+        grid-area: status;
+    }
+
+    .match-row .odds-row {
+        grid-area: odds;
+    }
+
+    .match-row .match-action {
+        grid-area: action;
+        text-align: right;
+    }
+
+    .odds-row {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .matches-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .filters-card {
+        gap: 10px;
+    }
+
+    .filters-card input[type='search'] {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .filters-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filters-card input[type='search'] {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .match-row {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            'status'
+            'time'
+            'home'
+            'away'
+            'odds'
+            'action';
+        gap: 8px;
+    }
+
+    .match-action {
+        text-align: left;
+    }
+}
