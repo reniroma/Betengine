@@ -1,4 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const cacheVersion = window.__CACHE_BUST_VERSION__ || Date.now().toString();
+    const withCacheBust = (path) => {
+        const url = new URL(path, window.location.href);
+        url.searchParams.set('v', cacheVersion);
+        return `${url.pathname}${url.search}`;
+    };
+
     const loadComponent = (placeholderId, path, fallback = '', onLoad = null) => {
         const target = document.getElementById(placeholderId);
         if (!target) return;
@@ -10,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        fetch(path)
+        fetch(withCacheBust(path))
             .then((res) => (res.ok ? res.text() : Promise.reject()))
             .then(setMarkup)
             .catch(() => {
