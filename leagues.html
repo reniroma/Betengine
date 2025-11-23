@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BetEngine | Leagues</title>
+
+    <script>
+        (function injectCacheBustedAssets() {
+            const now = new Date();
+            const version = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+
+            const withVersion = (path) => {
+                const url = new URL(path, window.location.href);
+                url.searchParams.set('v', version);
+                return `${url.pathname}${url.search}`;
+            };
+
+            const addStylesheet = (href) => {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = withVersion(href);
+                document.head.appendChild(link);
+            };
+
+            const addScript = (src) => {
+                const script = document.createElement('script');
+                script.src = withVersion(src);
+                script.defer = true;
+                document.head.appendChild(script);
+            };
+
+            window.__CACHE_BUST_VERSION__ = version;
+            addStylesheet('styles/reset.css');
+            addStylesheet('styles/global.css');
+            addScript('scripts/main.js');
+        })();
+    </script>
+</head>
+<body>
+    <div class="page">
+        <div id="header-placeholder"></div>
+
+        <main class="content" role="main">
+            <section class="page-hero">
+                <div>
+                    <p class="eyebrow">Competitions</p>
+                    <h1>Leagues overview</h1>
+                    <p class="subtitle">Track every competition with the refreshed BetEngine theme and consistent UI.</p>
+                    <div class="page-hero__meta">
+                        <span class="pill pill--accent">Updated theme</span>
+                        <span class="pill">Coverage: top & emerging leagues</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-card" aria-label="League highlights">
+                <h2>Top leagues</h2>
+                <div class="card-grid">
+                    <article class="stat-card">
+                        <h3>Premier League</h3>
+                        <p class="value">20 clubs</p>
+                        <p class="subtitle">Live form, odds, and pace metrics.</p>
+                    </article>
+                    <article class="stat-card">
+                        <h3>La Liga</h3>
+                        <p class="value">20 clubs</p>
+                        <p class="subtitle">Momentum indicators built into the theme.</p>
+                    </article>
+                    <article class="stat-card">
+                        <h3>Serie A</h3>
+                        <p class="value">20 clubs</p>
+                        <p class="subtitle">Match cards reuse the global palette.</p>
+                    </article>
+                    <article class="stat-card">
+                        <h3>MLS</h3>
+                        <p class="value">29 clubs</p>
+                        <p class="subtitle">Widgets and tables match the new style.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section-card" aria-label="Regional focus">
+                <h2>Regional focus</h2>
+                <ul class="list-stacked">
+                    <li><span>Nordic leagues</span><span class="pill">High tempo</span></li>
+                    <li><span>South America</span><span class="pill pill--accent">Night fixtures</span></li>
+                    <li><span>Asia & Oceania</span><span class="pill">Live stats ready</span></li>
+                </ul>
+            </section>
+        </main>
+
+        <div id="footer-placeholder"></div>
+    </div>
+</body>
+</html>
