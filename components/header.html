@@ -1,11 +1,79 @@
 <header class="main-header">
     <div class="header-container">
-        <h1 class="logo">BetEngine</h1>
-        <nav class="nav-menu">
-            <a href="index.html">Home</a>
-            <a href="matches.html">Matches</a>
-            <a href="leagues.html">Leagues</a>
-            <a class="premium-btn" href="#">Premium</a>
+        <a class="logo" href="index.html" aria-label="BetEngine Home">BetEngine</a>
+
+        <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="nav-menu" aria-label="Primary navigation">
+            <ul class="nav-list">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="matches.html">Next Matches</a></li>
+                <li><a href="odds.html">Dropping Odds</a></li>
+                <li><a href="widgets.html">Sure Bets</a></li>
+                <li><a href="live-stats.html">In-Play Odds</a></li>
+                <li><a href="leagues.html">All Events</a></li>
+                <li><a href="dashboard.html">Betting Tools</a></li>
+            </ul>
         </nav>
+
+        <div class="header-actions">
+            <div class="search-bar" role="search">
+                <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M10.75 4.5a6.25 6.25 0 1 1 0 12.5 6.25 6.25 0 0 1 0-12.5zm0-1.5a7.75 7.75 0 0 0-6.08 12.56L2.22 17.99a1 1 0 1 0 1.42 1.42l2.45-2.45A7.75 7.75 0 1 0 10.75 3z" />
+                </svg>
+                <input type="search" placeholder="Search team / player…" aria-label="Search team or player" />
+            </div>
+            <button class="search-toggle" type="button" aria-label="Toggle search">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M10.75 4.5a6.25 6.25 0 1 1 0 12.5 6.25 6.25 0 0 1 0-12.5zm0-1.5a7.75 7.75 0 0 0-6.08 12.56L2.22 17.99a1 1 0 1 0 1.42 1.42l2.45-2.45A7.75 7.75 0 1 0 10.75 3z" />
+                </svg>
+            </button>
+            <button class="notification-btn" type="button" aria-label="Notifications">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M12 2a6 6 0 0 0-6 6v4.764l-.948 1.58A1 1 0 0 0 5.93 16h12.14a1 1 0 0 0 .878-1.656L18 12.764V8a6 6 0 0 0-6-6zm0 20a2.75 2.75 0 0 0 2.45-1.5H9.55A2.75 2.75 0 0 0 12 22z" />
+                </svg>
+            </button>
+        </div>
     </div>
 </header>
+
+<script>
+    (function () {
+        const navToggle = document.querySelector('.nav-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        const searchToggle = document.querySelector('.search-toggle');
+        const searchBar = document.querySelector('.search-bar');
+        const header = document.querySelector('.main-header');
+
+        navToggle?.addEventListener('click', () => {
+            const isOpen = navMenu.classList.toggle('is-open');
+            navToggle.setAttribute('aria-expanded', isOpen);
+            header.classList.toggle('nav-open', isOpen);
+        });
+
+        navMenu?.addEventListener('click', (event) => {
+            if (event.target instanceof Element && event.target.tagName.toLowerCase() === 'a' && navMenu.classList.contains('is-open')) {
+                navMenu.classList.remove('is-open');
+                header.classList.remove('nav-open');
+                navToggle?.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        searchToggle?.addEventListener('click', () => {
+            searchBar?.classList.toggle('is-open');
+            searchBar?.querySelector('input')?.focus();
+        });
+
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.nav-list a').forEach((link) => {
+            const href = link.getAttribute('href');
+            if (href === currentPage) {
+                link.classList.add('is-active');
+            }
+        });
+    })();
+</script>
