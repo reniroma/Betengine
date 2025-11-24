@@ -835,8 +835,18 @@ p, span, label {
     background: rgba(255, 255, 255, 0.04);
 }
 
+.team-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
 .team-name {
     font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .status-badge {
@@ -905,6 +915,7 @@ p, span, label {
     text-align: center;
     font-weight: 700;
     transition: border 0.2s ease, transform 0.2s ease;
+    white-space: nowrap;
 }
 
 .odds-box {
@@ -941,6 +952,10 @@ p, span, label {
 .match-action a {
     color: var(--brand-rose);
     font-weight: 600;
+}
+
+.empty-state .league-header {
+    justify-content: space-between;
 }
 
 .side-widgets {
