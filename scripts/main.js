@@ -183,8 +183,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const createMatchRow = (fixture, oddsFormat) => {
-        const homeName = fixture.teamNameHome || fixture.homeTeam;
-        const awayName = fixture.teamNameAway || fixture.awayTeam;
+        const homeName = fixture.teamNameHome ?? fixture.nameHome ?? fixture.homeTeam ?? '—';
+        const awayName = fixture.teamNameAway ?? fixture.nameAway ?? fixture.awayTeam ?? '—';
         const row = document.createElement('div');
         row.className = `match-row ${fixture.status !== 'upcoming' ? fixture.status : ''}`.trim();
 
