@@ -1,0 +1,84 @@
+/* Matches page header and filter layout adjustments */
+
+.matches-intro {
+    margin-bottom: 18px;
+}
+
+.filters-card {
+    display: grid;
+    grid-template-columns: minmax(240px, 1.2fr) repeat(4, minmax(150px, 0.8fr)) minmax(220px, 1.4fr);
+    align-items: center;
+    column-gap: 14px;
+    row-gap: 12px;
+    padding: 18px 20px;
+}
+
+.filters-card .filter-group {
+    width: 100%;
+}
+
+.filters-card .quick-dates {
+    gap: 10px;
+    flex-wrap: nowrap;
+    grid-column: span 2;
+}
+
+.filters-card label {
+    white-space: nowrap;
+}
+
+.filters-card select,
+.filters-card input[type='date'] {
+    width: 100%;
+}
+
+.filters-card input[type='search'],
+.filters-card .filter-search {
+    margin-left: 0;
+    width: 100%;
+    grid-column: -2 / -1;
+    min-width: 220px;
+}
+
+.filters-card .filter-chip,
+.filters-card input,
+.filters-card select {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+}
+
+@media (max-width: 1180px) {
+    .filters-card {
+        grid-template-columns: repeat(3, minmax(200px, 1fr));
+    }
+
+    .filters-card .quick-dates {
+        grid-column: 1 / -1;
+    }
+
+    .filters-card input[type='search'],
+    .filters-card .filter-search {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .matches-intro {
+        margin-bottom: 14px;
+    }
+
+    .filters-card {
+        grid-template-columns: 1fr;
+        padding: 16px 18px;
+    }
+
+    .filters-card .filter-group,
+    .filters-card .quick-dates {
+        grid-column: 1 / -1;
+    }
+
+    .filters-card .quick-dates {
+        flex-wrap: wrap;
+    }
+}
