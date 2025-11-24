@@ -40,6 +40,7 @@
 </head>
 <body>
     <div id="header-placeholder"></div>
+    <script src="scripts/loadHeader.js"></script>
     <div class="page">
 
         <main class="content" role="main">
@@ -381,14 +382,5 @@
 
     </div>
     <div id="footer-placeholder"></div>
-    <script>
-        fetch("components/header.html")
-            .then(r => r.text())
-            .then(h => document.getElementById("header-placeholder").innerHTML = h);
-
-        fetch("components/footer.html")
-            .then(r => r.text())
-            .then(f => document.getElementById("footer-placeholder").innerHTML = f);
-    </script>
 </body>
 </html>

@@ -25,17 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     };
 
-    const highlightActiveNav = (container) => {
-        const currentPage = location.pathname.split('/').pop() || 'index.html';
-        const links = container.querySelectorAll('a[href]');
-        links.forEach((link) => {
-            const href = link.getAttribute('href');
-            if (href && currentPage.endsWith(href)) {
-                link.classList.add('is-active');
-            }
-        });
-    };
-
     const enhanceFilterChips = () => {
         const chips = document.querySelectorAll('.filter-chip');
         if (!chips.length) return;
@@ -55,24 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     };
-
-    loadComponent(
-        'header-placeholder',
-        'components/header.html',
-        `<header class="main-header">
-            <div class="header-container">
-                <h1 class="logo">BetEngine</h1>
-                <nav class="nav-menu">
-                    <a href="index.html">Home</a>
-                    <a href="matches.html">Matches</a>
-                    <a href="leagues.html">Leagues</a>
-                    <a href="stats.html">Stats</a>
-                    <a class="premium-btn" href="#">Premium</a>
-                </nav>
-            </div>
-        </header>`,
-        highlightActiveNav
-    );
 
     loadComponent(
         'footer-placeholder',
