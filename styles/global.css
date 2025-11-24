@@ -1197,3 +1197,52 @@ p, span, label {
         align-items: center;
     }
 }
+
+/* --- HEADER STYLES --- */
+.main-header {
+    width: 100%;
+    background: #141414;
+    border-bottom: 1px solid #222;
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.header-container {
+    width: 92%;
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: 700;
+    color: #00ff8a;
+    letter-spacing: -0.5px;
+}
+
+.nav-menu a {
+    margin-left: 24px;
+    font-size: 17px;
+    color: #e4e4e4;
+    opacity: 0.85;
+    transition: 0.25s ease;
+}
+
+.nav-menu a:hover {
+    opacity: 1;
+    color: #00ff8a;
+}
+
+.premium-btn {
+    padding: 8px 18px;
+    background: linear-gradient(90deg, #00ff8a, #00c46b);
+    border-radius: 6px;
+    color: #000 !important;
+    font-weight: bold;
+    opacity: 1 !important;
+}
