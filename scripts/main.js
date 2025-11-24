@@ -183,6 +183,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const createMatchRow = (fixture, oddsFormat) => {
+        const homeName = fixture.teamNameHome || fixture.homeTeam;
+        const awayName = fixture.teamNameAway || fixture.awayTeam;
         const row = document.createElement('div');
         row.className = `match-row ${fixture.status !== 'upcoming' ? fixture.status : ''}`.trim();
 
@@ -191,10 +193,10 @@ document.addEventListener('DOMContentLoaded', () => {
         row.innerHTML = `
             <div class="time">${fixture.time}</div>
             <div class="home team-cell">
-                <span class="team-name">${fixture.homeTeam}</span>
+                <span class="team-name">${homeName}</span>
             </div>
             <div class="away team-cell">
-                <span class="team-name">${fixture.awayTeam}</span>
+                <span class="team-name">${awayName}</span>
             </div>
             <div class="status">
                 ${statusLabel ? `<span class="status-badge ${fixture.status}">${statusLabel}</span>` : ''}
