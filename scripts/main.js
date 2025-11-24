@@ -29,15 +29,20 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const baseDate = new Date();
-    const toIsoDate = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
-    const isoToday = toIsoDate(baseDate);
-    const isoTomorrow = toIsoDate(new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + 1));
-    const isoYesterday = toIsoDate(new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() - 1));
+    const formatDateKey = (date) => {
+        const normalized = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        return `${normalized.getFullYear()}-${String(normalized.getMonth() + 1).padStart(2, '0')}-${String(
+            normalized.getDate()
+        ).padStart(2, '0')}`;
+    };
+    const todayKey = formatDateKey(baseDate);
+    const tomorrowKey = formatDateKey(new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + 1));
+    const yesterdayKey = formatDateKey(new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() - 1));
 
     const fixturesData = [
         {
             id: 'pl-001',
-            date: isoToday,
+            date: todayKey,
             time: '19:45',
             league: 'Premier League',
             country: 'England',
@@ -50,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             id: 'pl-002',
-            date: isoToday,
+            date: todayKey,
             time: '21:00',
             league: 'Premier League',
             country: 'England',
@@ -63,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             id: 'pl-003',
-            date: isoYesterday,
+            date: yesterdayKey,
             time: 'FT',
             league: 'Premier League',
             country: 'England',
@@ -76,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             id: 'sa-001',
-            date: isoToday,
+            date: todayKey,
             time: '18:00',
             league: 'Serie A',
             country: 'Italy',
@@ -89,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             id: 'sa-002',
-            date: isoToday,
+            date: todayKey,
             time: '20:45',
             league: 'Serie A',
             country: 'Italy',
@@ -102,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             id: 'sa-003',
-            date: isoTomorrow,
+            date: tomorrowKey,
             time: '17:30',
             league: 'Serie A',
             country: 'Italy',
@@ -115,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             id: 'laliga-001',
-            date: isoToday,
+            date: todayKey,
             time: '19:30',
             league: 'La Liga',
             country: 'Spain',
@@ -128,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             id: 'mls-001',
-            date: isoTomorrow,
+            date: tomorrowKey,
             time: '22:00',
             league: 'MLS',
             country: 'USA',
@@ -153,20 +158,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let activeQuickDate = 'today';
 
-    const isSameDate = (a, b) =>
-        a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
-
     const getDateFromSelection = () => {
         if (datePicker && datePicker.value) {
             const customDate = new Date(datePicker.value);
-            return new Date(customDate.getFullYear(), customDate.getMonth(), customDate.getDate());
+            return formatDateKey(customDate);
         }
         if (!activeQuickDate) return null;
         const base = new Date();
         if (activeQuickDate === 'tomorrow') {
             base.setDate(base.getDate() + 1);
         }
-        return new Date(base.getFullYear(), base.getMonth(), base.getDate());
+        return formatDateKey(base);
     };
 
     const convertOdds = (value, format) => {
@@ -306,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const applyFilters = () => {
         if (!matchesContainer) return;
-        const targetDate = getDateFromSelection();
+        const targetDateKey = getDateFromSelection();
         const searchTerm = (searchInput?.value || '').trim().toLowerCase();
         const selectedSport = sportSelect?.value;
         const selectedCountry = countrySelect?.value || 'all';
@@ -314,11 +316,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const oddsFormat = oddsFormatSelect?.value || 'decimal';
 
         const filtered = fixturesData.filter((fixture) => {
-            const fixtureDate = new Date(fixture.date);
+            const fixtureDateKey = fixture.date;
             if (selectedSport && fixture.sport !== selectedSport) return false;
             if (selectedCountry !== 'all' && fixture.country !== selectedCountry) return false;
             if (selectedLeague !== 'all' && fixture.league !== selectedLeague) return false;
-            if (targetDate && !isSameDate(fixtureDate, targetDate)) return false;
+            if (targetDateKey && fixtureDateKey !== targetDateKey) return false;
             if (searchTerm) {
                 const haystack = `${fixture.homeTeam} ${fixture.awayTeam} ${fixture.league}`.toLowerCase();
                 if (!haystack.includes(searchTerm)) return false;
