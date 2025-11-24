@@ -33,6 +33,7 @@
             window.__CACHE_BUST_VERSION__ = version;
             addStylesheet('styles/reset.css');
             addStylesheet('styles/global.css');
+            addStylesheet('styles/matches.css');
             addScript('scripts/main.js');
         })();
     </script>
@@ -49,7 +50,7 @@
             </section>
 
             <section class="filters-card" aria-label="Match filters">
-                <div class="filter-group" aria-label="Quick dates">
+                <div class="filter-group quick-dates" aria-label="Quick dates">
                     <span class="filter-chip" role="button" tabindex="0">Today</span>
                     <span class="filter-chip" role="button" tabindex="0">Tomorrow</span>
                     <input type="date" aria-label="Choose date" />
@@ -94,7 +95,7 @@
                     </select>
                 </div>
 
-                <input type="search" placeholder="Search team or league…" aria-label="Search team or league" />
+                <input class="filter-search" type="search" placeholder="Search team or league…" aria-label="Search team or league" />
             </section>
 
             <section class="matches-layout">
