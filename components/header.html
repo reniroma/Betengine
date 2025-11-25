@@ -1,11 +1,44 @@
 <header class="main-header">
-    <div class="header-container">
-        <h1 class="logo">BetEngine</h1>
-        <nav class="nav-menu">
-            <a href="index.html">Home</a>
-            <a href="matches.html">Matches</a>
-            <a href="leagues.html">Leagues</a>
-            <a class="premium-btn" href="#">Premium</a>
-        </nav>
+    <div class="top-bar">
+        <div class="left-block"></div>
+
+        <div class="center-block">
+            <nav class="main-nav">
+                <a href="odds.html" class="nav-item">ODDS COMPARISON</a>
+                <a href="dashboard.html" class="nav-item">COMMUNITY</a>
+                <a href="#" class="nav-item nav-item--bookmakers">
+                    BOOKMAKERS
+                    <span class="premium-badge" aria-label="Premium">⭐</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="right-block">
+            <div class="top-options">
+                <span class="small-label">Odds formats:</span>
+                <span class="selector">Decimal Odds ▾</span>
+                <span class="small-label icon-globe">Language:</span>
+                <span class="selector">English ▾</span>
+                <button class="login-btn">LOGIN</button>
+                <button class="register-btn">REGISTER</button>
+            </div>
+
+            <div class="search-box">
+                <input type="text" placeholder="Search (team / player)" aria-label="Search" />
+                <span class="search-icon" aria-hidden="true">🔍</span>
+                <span class="gift-icon" aria-hidden="true">🎁</span>
+            </div>
+        </div>
     </div>
+
+    <nav class="sub-nav">
+        <a href="index.html" class="sub-item">HOME</a>
+        <a href="matches.html" class="sub-item">NEXT MATCHES</a>
+        <a href="odds.html" class="sub-item">DROPPING ODDS</a>
+        <a href="widgets.html" class="sub-item">SURE BETS</a>
+        <a href="live-stats.html" class="sub-item">IN PLAY ODDS</a>
+        <a href="leagues.html" class="sub-item">ALL EVENTS</a>
+        <a href="#" class="sub-item">BETTING TOOLS ▾</a>
+        <a href="#" class="sub-item">BETTING</a>
+    </nav>
 </header>
