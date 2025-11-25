@@ -825,6 +825,57 @@ p, span, label {
     }
 }
 
+@media (max-width: 480px) {
+    h1,
+    h2,
+    h3,
+    h4 {
+        font-size: 90%;
+    }
+
+    .content {
+        margin: 24px auto 40px;
+        gap: 18px;
+    }
+
+    .section-card,
+    .panel-card,
+    .form-card,
+    .league-card,
+    .widget,
+    .match-card,
+    .filters-card,
+    .matches-intro,
+    .page-hero {
+        font-size: 88%;
+        padding: 14px 16px;
+    }
+
+    .match-row {
+        padding: 10px 12px;
+        gap: 8px 10px;
+    }
+
+    .nav-menu {
+        gap: 10px 14px;
+    }
+
+    .nav-menu a {
+        font-size: 14px;
+    }
+
+    .premium-btn {
+        padding: 6px 14px;
+        font-size: 14px;
+    }
+
+    .filters-card .filter-chip,
+    .filters-card input,
+    .filters-card select {
+        min-height: 40px;
+    }
+}
+
 /* Matches page */
 .matches-intro {
     background: var(--panel);
