@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arbitrage & Trap Radar v14.0 | Golden Zone Engine</title>
+    <title>Arbitrage & Trap Radar v22.0 | The Sniper</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body { font-family: 'Courier New', Courier, monospace; }
         .crt-overlay {
@@ -19,6 +20,12 @@
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #020617; }
         ::-webkit-scrollbar-thumb { background: #06b6d4; border-radius: 3px; }
+        
+        input[type="number"].dash-input { width: 100%; background: #0f172a; border: 1px solid #1e293b; padding: 6px; color: #38bdf8; outline: none; border-radius: 3px; font-weight: bold; text-align: center; }
+        input[type="number"].dash-input:focus { border-color: #6366f1; }
+
+        .tier-1 { border-left: 4px solid #fbbf24; background: rgba(251, 191, 36, 0.05); } 
+        .tier-2 { border-left: 4px solid #34d399; background: rgba(52, 211, 153, 0.05); opacity: 0.8;} 
     </style>
 </head>
 <body class="bg-[#020617] text-cyan-500 min-h-screen relative pb-20">
@@ -27,16 +34,16 @@
     <div class="container mx-auto px-4 py-8 max-w-7xl relative z-10">
         <div class="flex flex-col items-center mb-6 text-center border-b border-cyan-900/50 pb-6">
             <div class="bg-indigo-950/50 text-indigo-400 px-4 py-1 rounded-sm text-xs font-bold tracking-widest uppercase mb-4 border border-indigo-500/30 animate-pulse">
-                System Active // V14.0 Golden Zone Engine
+                System Active // V22.0 The Sniper (Strict V16 Logic)
             </div>
             <h1 class="text-4xl font-extrabold text-white mb-2 tracking-widest uppercase text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500 drop-shadow-[0_0_10px_rgba(99,102,241,0.8)]">
                 Trap Radar & Simulator
             </h1>
         </div>
 
-        <div class="flex justify-center gap-4 mb-8">
+        <div class="flex justify-center gap-4 mb-6">
             <button onclick="switchTab('manual')" id="tab-manual" class="tab-btn active px-6 py-2 text-xs font-bold uppercase tracking-widest text-slate-400 transition-all hover:text-cyan-400">Live Scanner</button>
-            <button onclick="switchTab('backtest')" id="tab-backtest" class="tab-btn px-6 py-2 text-xs font-bold uppercase tracking-widest text-slate-400 transition-all hover:text-cyan-400">Batch Backtest</button>
+            <button onclick="switchTab('backtest')" id="tab-backtest" class="tab-btn px-6 py-2 text-xs font-bold uppercase tracking-widest text-slate-400 transition-all hover:text-cyan-400">Batch Backtest & Lab</button>
         </div>
 
         <div id="manual-section" class="block">
@@ -44,16 +51,10 @@
                 <div class="xl:col-span-5 bg-[#0f172a] p-6 border border-cyan-900 shadow-[0_0_20px_rgba(6,182,212,0.05)]">
                     <h3 class="text-cyan-400 text-sm font-bold uppercase tracking-widest mb-6 border-b border-cyan-900 pb-2">Manual Uplink</h3>
                     <div class="space-y-5">
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 gap-4">
                             <div>
                                 <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Target ID</label>
                                 <input type="text" id="targetId" placeholder="Team A vs Team B" class="w-full bg-[#020617] border border-cyan-900 p-2 text-cyan-300 outline-none focus:border-cyan-400 text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">League Risk</label>
-                                <select id="leagueRisk" class="w-full bg-[#020617] border border-cyan-900 p-2 text-cyan-300 outline-none text-sm">
-                                    <option value="1.0">Standard</option><option value="1.2">Volatile</option><option value="1.6">Extreme</option>
-                                </select>
                             </div>
                         </div>
                         <div class="bg-[#020617] p-4 border border-cyan-900/50 rounded-sm">
@@ -71,13 +72,13 @@
                                 </div>
                             </div>
                         </div>
-                        <button onclick="alert('Manual scan isolated. Switch to Backtest for automated historic runs.')" class="w-full bg-cyan-950 hover:bg-cyan-900 text-cyan-400 font-bold py-3 border border-cyan-500 uppercase tracking-widest text-sm">
+                        <button onclick="alert('Manual scan isolated. Switch to Backtest & Lab for testing.')" class="w-full bg-cyan-950 hover:bg-cyan-900 text-cyan-400 font-bold py-3 border border-cyan-500 uppercase tracking-widest text-sm">
                             Manual Scan (Standby)
                         </button>
                     </div>
                 </div>
                 <div class="xl:col-span-7 bg-[#0f172a] p-6 border border-cyan-900 flex items-center justify-center">
-                    <p class="text-slate-500 text-sm uppercase tracking-widest">Manual module minimized for backtest priority.</p>
+                    <p class="text-slate-500 text-sm uppercase tracking-widest">Manual module minimized. Use the Laboratory for Data extraction.</p>
                 </div>
             </div>
         </div>
@@ -85,32 +86,46 @@
         <div id="backtest-section" class="hidden space-y-6">
             
             <div class="bg-[#0f172a] p-6 border border-indigo-900 shadow-[0_0_20px_rgba(99,102,241,0.05)] relative">
-                <div id="btErrorMsg" class="hidden mb-4 p-4 bg-rose-950/80 border border-rose-500 text-rose-300 text-xs font-mono rounded overflow-auto max-h-32">
-                    [ERROR MSG]
-                </div>
+                <div id="btErrorMsg" class="hidden mb-4 p-4 bg-rose-950/80 border border-rose-500 text-rose-300 text-xs font-mono rounded overflow-auto max-h-32"></div>
                 
-                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex flex-col md:flex-row items-end justify-between gap-6 mb-6">
                     <div class="flex-1 w-full">
-                        <label class="block text-[10px] font-bold text-indigo-400 uppercase mb-2">Upload Historic Data (.csv)</label>
-                        <input type="file" id="csvFile" accept="*/*" style="width: 100%; padding: 12px; background: #1e293b; color: #818cf8; border: 1px solid #312e81; border-radius: 5px;">
+                        <label class="block text-[10px] font-bold text-indigo-400 uppercase mb-2">Upload Historic Data (.csv / .zip)</label>
+                        <input type="file" id="csvFile" multiple accept=".csv, .zip, application/zip, application/x-zip-compressed" style="width: 100%; padding: 12px; background: #1e293b; color: #818cf8; border: 1px solid #312e81; border-radius: 5px;">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Starting Bankroll</label>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Start Bankroll</label>
                         <input type="number" id="startBankroll" value="1000" class="w-32 bg-[#020617] border border-indigo-900 p-2 text-indigo-300 outline-none text-center font-bold">
                     </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">League Risk</label>
-                        <select id="btLeagueRisk" class="w-32 bg-[#020617] border border-indigo-900 p-2 text-indigo-300 outline-none text-center text-xs font-bold uppercase">
-                            <option value="1.0">Standard</option><option value="1.2">Volatile</option><option value="1.6">Extreme</option>
-                        </select>
-                    </div>
-                    <div class="pt-5 flex gap-2">
+                    <div class="flex gap-2">
                         <button onclick="runBacktest()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black py-3 px-6 shadow-[0_0_15px_rgba(99,102,241,0.4)] uppercase tracking-widest text-sm transition-colors rounded-sm">
-                            Run Sim
+                            Extract Data
                         </button>
                         <button onclick="exportToAI()" class="bg-purple-600 hover:bg-purple-500 text-white font-black py-3 px-6 shadow-[0_0_15px_rgba(168,85,247,0.4)] uppercase tracking-widest text-sm transition-colors rounded-sm border border-purple-400">
-                            Copy Data
+                            Copy Report
                         </button>
+                    </div>
+                </div>
+
+                <div class="bg-[#020617] border border-indigo-900/50 p-4 rounded-sm">
+                    <h3 class="text-[10px] text-indigo-500 font-black uppercase tracking-widest mb-4 border-b border-indigo-900/50 pb-2">Sniper Calibration (Default: Strict V16 Logic)</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1">Min Odds Filter</label>
+                            <input type="number" id="p_minOdds" value="1.50" step="0.01" class="dash-input">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1">Max Odds Filter</label>
+                            <input type="number" id="p_maxOdds" value="2.60" step="0.01" class="dash-input">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-amber-500 uppercase mb-1">Min Soft Drop % (Trap)</label>
+                            <input type="number" id="p_minSoft" value="15" step="0.1" class="dash-input" title="How much Bet365 must drop to trigger a trap">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-emerald-500 uppercase mb-1">Max Sharp Drop % (Pinnacle)</label>
+                            <input type="number" id="p_maxSharp" value="4" step="0.1" class="dash-input" title="Pinnacle must NOT drop more than this to confirm divergence">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -120,29 +135,33 @@
                     <p class="text-slate-500 text-[9px] font-bold uppercase tracking-widest mb-1">Matches Scanned</p>
                     <h2 id="resScanned" class="text-2xl font-black text-slate-300">0</h2>
                 </div>
-                <div class="bg-[#020617] p-4 border border-cyan-900 text-center">
-                    <p class="text-cyan-600 text-[9px] font-bold uppercase tracking-widest mb-1">Signals Executed</p>
-                    <h2 id="resSignals" class="text-2xl font-black text-cyan-400">0</h2>
+                <div class="bg-[#020617] p-4 border border-amber-900/50 text-center">
+                    <p class="text-amber-500 text-[9px] font-bold uppercase tracking-widest mb-1">Tier 1 Traps (BETS PLACED)</p>
+                    <h2 id="resTraps" class="text-2xl font-black text-amber-400">0</h2>
                 </div>
-                <div class="bg-[#020617] p-4 border border-emerald-900 text-center">
-                    <p class="text-emerald-600 text-[9px] font-bold uppercase tracking-widest mb-1">Hit Rate (Win %)</p>
-                    <h2 id="resWinRate" class="text-2xl font-black text-emerald-400">0%</h2>
+                <div class="bg-[#020617] p-4 border border-emerald-900/50 text-center">
+                    <p class="text-emerald-500 text-[9px] font-bold uppercase tracking-widest mb-1">Tier 2 Smart (NO BET)</p>
+                    <h2 id="resSmart" class="text-2xl font-black text-emerald-400">0</h2>
                 </div>
-                <div class="bg-[#020617] p-4 border border-amber-900 text-center relative overflow-hidden">
-                    <p class="text-amber-600 text-[9px] font-bold uppercase tracking-widest mb-1">Final Bankroll</p>
-                    <h2 id="resBankroll" class="text-2xl font-black text-amber-400 drop-shadow-[0_0_5px_currentColor]">$0.00</h2>
+                <div class="bg-[#020617] p-4 border border-cyan-900 text-center relative overflow-hidden">
+                    <p class="text-cyan-600 text-[9px] font-bold uppercase tracking-widest mb-1">Final Bankroll (Only T1)</p>
+                    <h2 id="resBankroll" class="text-2xl font-black text-cyan-400 drop-shadow-[0_0_5px_currentColor]">$0.00</h2>
                 </div>
             </div>
 
             <div class="bg-[#0f172a] border border-indigo-900 shadow-[0_0_20px_rgba(99,102,241,0.05)] flex flex-col h-[500px]">
-                <div class="p-3 border-b border-indigo-900/50 bg-[#020617]">
+                <div class="p-3 border-b border-indigo-900/50 bg-[#020617] flex justify-between items-center">
                     <h3 class="text-[10px] font-bold uppercase text-indigo-400 tracking-widest">Simulated Ledger</h3>
+                    <div class="text-[9px] font-bold space-x-3">
+                        <span class="text-amber-400">🟡 TIER 1: TRAP (BANKROLL AFFECTED)</span>
+                        <span class="text-emerald-400">🟢 TIER 2: SMART MONEY (TRACKING ONLY)</span>
+                    </div>
                 </div>
                 <div class="overflow-auto flex-1 p-2">
                     <table class="w-full text-left text-[10px] whitespace-nowrap">
                         <thead class="text-slate-500 sticky top-0 bg-[#0f172a] z-10 border-b border-slate-800">
                             <tr>
-                                <th class="p-2 font-bold uppercase tracking-widest">Fixture / Target</th>
+                                <th class="p-2 font-bold uppercase tracking-widest">League / Fixture</th>
                                 <th class="p-2 font-bold uppercase tracking-widest">Metrics (S/P)</th>
                                 <th class="p-2 font-bold uppercase tracking-widest">AI Action</th>
                                 <th class="p-2 font-bold uppercase tracking-widest text-center">Result</th>
@@ -151,7 +170,7 @@
                             </tr>
                         </thead>
                         <tbody id="btBody">
-                            <tr><td colspan="6" class="text-center p-8 text-slate-600 italic">Upload a CSV and initialize simulation...</td></tr>
+                            <tr><td colspan="6" class="text-center p-8 text-slate-600 italic">Upload CSV/ZIP files, set parameters, and click Extract...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -162,6 +181,14 @@
 
     <script>
         let aiExportString = "";
+        let globalTotalScanned = 0;
+        let countTier1 = 0;
+        let countTier2 = 0;
+        let globalWinsTier1 = 0;
+        let globalCurrentBankroll = 1000;
+        let globalLogHTML = "";
+
+        let cachedDataSets = []; 
 
         function switchTab(tab) {
             document.getElementById('manual-section').style.display = tab === 'manual' ? 'block' : 'none';
@@ -177,10 +204,7 @@
             if(b <= 0 || p <= 0) return 0;
             
             let kellyFraction = ((p * b) - q) / b;
-            let quarterKelly = kellyFraction * 0.25;
-            
-            // STRICT BANKROLL PROTECTOR: Max 5% of Bankroll per bet
-            return Math.min(quarterKelly, 0.05);
+            return Math.max(0, Math.min(kellyFraction * 0.25, 0.05)); 
         }
 
         function showError(msg) {
@@ -195,7 +219,7 @@
 
         function exportToAI() {
             if(!aiExportString) {
-                alert("SYS.ERR: No data available. Run a simulation first.");
+                alert("SYS.ERR: No data available.");
                 return;
             }
             navigator.clipboard.writeText(aiExportString).then(() => {
@@ -205,192 +229,238 @@
             });
         }
 
+        document.getElementById('csvFile').addEventListener('change', function() {
+            cachedDataSets = [];
+        });
+
         async function runBacktest() {
             hideError();
-            aiExportString = ""; 
             const fileInput = document.getElementById('csvFile');
             const initialBankroll = parseFloat(document.getElementById('startBankroll').value) || 1000;
-            const leagueRisk = parseFloat(document.getElementById('btLeagueRisk').value) || 1.0;
 
-            if (!fileInput.files.length) {
-                showError("SYS.ERR: Please select a file.");
+            if (fileInput.files.length > 0 && cachedDataSets.length === 0) {
+                try {
+                    for (let i = 0; i < fileInput.files.length; i++) {
+                        const file = fileInput.files[i];
+                        const fileName = file.name.toLowerCase();
+
+                        if (fileName.endsWith('.zip')) {
+                            const zipData = await JSZip.loadAsync(file);
+                            const fileNames = Object.keys(zipData.files);
+
+                            for (const name of fileNames) {
+                                if (name.toLowerCase().endsWith('.csv') && !zipData.files[name].dir) {
+                                    const text = await zipData.files[name].async("string");
+                                    const cleanName = name.split('/').pop(); 
+                                    parseAndCache(text, cleanName);
+                                }
+                            }
+                        } else if (fileName.endsWith('.csv')) {
+                            const text = await file.text();
+                            parseAndCache(text, file.name);
+                        }
+                    }
+                } catch (err) {
+                    showError("SYS.ERR: Extraction/Reading failed. Error: " + err.message);
+                    return;
+                }
+            }
+
+            if (cachedDataSets.length === 0) {
+                showError("SYS.ERR: Please select valid CSV/ZIP files.");
                 return;
             }
 
-            try {
-                const file = fileInput.files[0];
-                const text = await file.text();
-                
-                const cleanText = text.replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-                const lines = cleanText.split('\n').filter(line => line.trim().length > 0);
-                
-                if (lines.length < 2) {
-                    showError("SYS.ERR: File is empty or malformed.");
-                    return;
-                }
-
-                const delimiter = lines[0].indexOf(';') > -1 ? ';' : ',';
-                const headers = lines[0].split(delimiter).map(h => h.replace(/['"\s]/g, '').trim());
-
-                const data = [];
-                for(let i = 1; i < lines.length; i++) {
-                    const rowStr = lines[i];
-                    if(!rowStr.trim()) continue;
-                    
-                    const values = rowStr.split(delimiter).map(v => v.replace(/['"]/g, '').trim());
-                    let rowObj = {};
-                    headers.forEach((h, idx) => {
-                        rowObj[h] = values[idx] || "";
-                    });
-                    data.push(rowObj);
-                }
-
-                processSimulation(data, initialBankroll, leagueRisk);
-
-            } catch (err) {
-                showError("SYS.ERR: File read failed. Error: " + err.message);
-            }
+            executeSimulation(initialBankroll);
         }
 
-        function processSimulation(data, startBankroll, leagueRisk) {
-            let currentBankroll = startBankroll;
-            let totalScanned = 0;
-            let signalsExecuted = 0;
-            let wins = 0;
-            let logHTML = "";
-
-            aiExportString = `--- AI SIMULATION REPORT v14 | RISK: ${leagueRisk} ---\n`;
-
-            const divThreshold = 18 / leagueRisk;
+        function parseAndCache(text, sourceName) {
+            const cleanText = text.replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+            const lines = cleanText.split('\n').filter(line => line.trim().length > 0);
             
-            if (data.length === 0) return;
+            if (lines.length < 2) return; 
 
-            for (let i = 0; i < data.length; i++) {
-                const row = data[i];
-                const home = row.HomeTeam;
-                const away = row.AwayTeam;
-                const ftr = row.FTR; 
+            const delimiter = lines[0].indexOf(';') > -1 ? ';' : ',';
+            const headers = lines[0].split(delimiter).map(h => h.replace(/['"\s]/g, '').trim());
+
+            const data = [];
+            for(let i = 1; i < lines.length; i++) {
+                const rowStr = lines[i];
+                if(!rowStr.trim()) continue;
                 
-                if (!home || !ftr) continue;
-                totalScanned++; 
+                const values = rowStr.split(delimiter).map(v => v.replace(/['"]/g, '').trim());
+                let rowObj = {};
+                headers.forEach((h, idx) => {
+                    rowObj[h] = values[idx] || "";
+                });
+                data.push(rowObj);
+            }
+            
+            cachedDataSets.push({ source: sourceName, data: data });
+        }
 
-                const sides = ['HOME', 'AWAY'];
-                for (const side of sides) {
-                    let softO, softC, sharpO, sharpC, softCloseD, softCloseOpp, winCond;
+        function executeSimulation(startBankroll) {
+            globalTotalScanned = 0;
+            countTier1 = 0;
+            countTier2 = 0;
+            globalWinsTier1 = 0;
+            globalCurrentBankroll = startBankroll;
+            globalLogHTML = "";
 
-                    if (side === 'HOME') {
-                        softO = parseFloat(row.B365H);
-                        softC = parseFloat(row.B365CH) || parseFloat(row.BWH) || parseFloat(row.BbAvH) || parseFloat(row.AvgH); 
-                        sharpO = parseFloat(row.PSH) || parseFloat(row.B365H); 
-                        sharpC = parseFloat(row.PSCH) || parseFloat(row.BbMxH) || parseFloat(row.PSA) || parseFloat(row.MaxH); 
-                        softCloseD = parseFloat(row.B365CD) || parseFloat(row.BWD) || parseFloat(row.BbAvD) || parseFloat(row.AvgD) || 3.0;
-                        softCloseOpp = parseFloat(row.B365CA) || parseFloat(row.BWA) || parseFloat(row.BbAvA) || parseFloat(row.AvgA) || 3.0;
-                        winCond = 'H';
-                    } else {
-                        softO = parseFloat(row.B365A);
-                        softC = parseFloat(row.B365CA) || parseFloat(row.BWA) || parseFloat(row.BbAvA) || parseFloat(row.AvgA); 
-                        sharpO = parseFloat(row.PSA) || parseFloat(row.B365A); 
-                        sharpC = parseFloat(row.PSCA) || parseFloat(row.BbMxA) || parseFloat(row.PSH) || parseFloat(row.MaxA); 
-                        softCloseD = parseFloat(row.B365CD) || parseFloat(row.BWD) || parseFloat(row.BbAvD) || parseFloat(row.AvgD) || 3.0;
-                        softCloseOpp = parseFloat(row.B365CH) || parseFloat(row.BWH) || parseFloat(row.BbAvH) || parseFloat(row.AvgH) || 3.0;
-                        winCond = 'A';
-                    }
+            const p_minOdds = parseFloat(document.getElementById('p_minOdds').value) || 1.50;
+            const p_maxOdds = parseFloat(document.getElementById('p_maxOdds').value) || 2.60;
+            const p_minSoft = parseFloat(document.getElementById('p_minSoft').value) || 15;
+            const p_maxSharp = parseFloat(document.getElementById('p_maxSharp').value) || 4;
 
-                    if (!softO || !softC || !sharpO || !sharpC) continue;
+            aiExportString = `--- AI SIMULATION REPORT v22 (THE SNIPER) ---\nPARAMS: Odds[${p_minOdds}-${p_maxOdds}] | MinDrop:${p_minSoft}% | MaxSharp:${p_maxSharp}%\n\n`;
 
-                    // THE GOLDEN ZONE: Filter out massive underdogs and worthless favorites
-                    if (softO < 1.50 || softO > 2.60) continue;
+            for (const dataset of cachedDataSets) {
+                const data = dataset.data;
+                const sourceName = dataset.source;
 
-                    const softDrop = ((softO - softC) / softO) * 100;
-                    const sharpDrop = ((sharpO - sharpC) / sharpO) * 100;
-                    const divergence = softDrop - sharpDrop;
+                for (let i = 0; i < data.length; i++) {
+                    const row = data[i];
+                    const home = row.HomeTeam;
+                    const away = row.AwayTeam;
+                    const ftr = row.FTR; 
+                    
+                    if (!home || !ftr) continue;
+                    globalTotalScanned++; 
 
-                    let signal = "";
-                    let action = "";
-                    let winProbRaw = 0;
-                    let execOdds = 0;
-                    let isFade = false;
+                    const sides = ['HOME', 'AWAY'];
+                    for (const side of sides) {
+                        let softO, softC, sharpO, sharpC, softCloseD, softCloseOpp, winCond;
 
-                    if (sharpDrop >= (20 / leagueRisk)) {
-                        signal = "EXTREME SHARP DROP";
-                        action = `FADE ${side} (Double Chance)`;
-                        winProbRaw = 75.8; // Safe to use static prob because we filtered for favorites
-                        isFade = true;
-                    } else if (divergence >= divThreshold && sharpDrop < 5) {
-                        signal = "DIVERGENCE TRAP";
-                        action = `FADE ${side} (Double Chance)`;
-                        winProbRaw = 64.3; 
-                        isFade = true;
-                    } else if (sharpDrop > (10 / leagueRisk) && sharpDrop < (15 / leagueRisk)) {
-                        signal = "SMART MONEY";
-                        action = `PRO ${side} (Direct Win)`;
-                        // Dynamic Probability based on Sharp Closing Odds + 4.5% Edge
-                        winProbRaw = ((1 / sharpC) * 100) + 4.5;
-                        execOdds = sharpC; 
-                    }
+                        if (side === 'HOME') {
+                            softO = parseFloat(row.B365H);
+                            softC = parseFloat(row.B365CH) || parseFloat(row.BWH) || parseFloat(row.AvgCH) || parseFloat(row.BbAvH) || parseFloat(row.AvgH); 
+                            sharpO = parseFloat(row.PSH) || parseFloat(row.B365H); 
+                            sharpC = parseFloat(row.PSCH) || parseFloat(row.AvgCH) || parseFloat(row.BbAvH) || parseFloat(row.AvgH); 
+                            
+                            softCloseD = parseFloat(row.B365CD) || parseFloat(row.BWD) || parseFloat(row.AvgCD) || parseFloat(row.BbAvD) || parseFloat(row.AvgD) || 3.0;
+                            softCloseOpp = parseFloat(row.B365CA) || parseFloat(row.BWA) || parseFloat(row.AvgCA) || parseFloat(row.BbAvA) || parseFloat(row.AvgA) || 3.0;
+                            winCond = 'H';
+                        } else {
+                            softO = parseFloat(row.B365A);
+                            softC = parseFloat(row.B365CA) || parseFloat(row.BWA) || parseFloat(row.AvgCA) || parseFloat(row.BbAvA) || parseFloat(row.AvgA); 
+                            sharpO = parseFloat(row.PSA) || parseFloat(row.B365A); 
+                            sharpC = parseFloat(row.PSCA) || parseFloat(row.AvgCA) || parseFloat(row.BbAvA) || parseFloat(row.AvgA); 
+                            
+                            softCloseD = parseFloat(row.B365CD) || parseFloat(row.BWD) || parseFloat(row.AvgCD) || parseFloat(row.BbAvD) || parseFloat(row.AvgD) || 3.0;
+                            softCloseOpp = parseFloat(row.B365CH) || parseFloat(row.BWH) || parseFloat(row.AvgCH) || parseFloat(row.BbAvH) || parseFloat(row.AvgH) || 3.0;
+                            winCond = 'A';
+                        }
 
-                    if (winProbRaw > 0) {
-                        if (isFade) {
+                        if (!softO || !softC || !sharpO || !sharpC) continue;
+
+                        if (softO < p_minOdds || softO > p_maxOdds) continue;
+
+                        const softDrop = ((softO - softC) / softO) * 100;
+                        const sharpDrop = ((sharpO - sharpC) / sharpO) * 100;
+                        
+                        let tierClass = "";
+                        let signal = "";
+                        let action = "";
+                        let winProbRaw = 0;
+                        let execOdds = 0;
+                        let isFade = false;
+
+                        // STRICT TIER 1: DIVERGENCE TRAP (Soft plummets, Sharp stays firm)
+                        if (softDrop >= p_minSoft && sharpDrop <= p_maxSharp) {
+                            signal = "TIER 1 (TRAP)";
+                            action = `FADE ${side} (DC X2)`;
+                            winProbRaw = 64.3; 
+                            isFade = true;
+                            tierClass = "tier-1";
+                        } 
+                        // TIER 2: SMART MONEY (Both drop heavily). WE DO NOT BET ON THIS ANYMORE.
+                        else if (softDrop >= p_minSoft && sharpDrop >= (p_minSoft - 3)) {
+                            signal = "TIER 2 (SMART)";
+                            action = `PRO ${side} (NO BET)`;
+                            tierClass = "tier-2";
+                        }
+
+                        // Execute calculation ONLY for Tier 1 (Traps)
+                        if (tierClass === "tier-1") {
                             const probX = 1 / softCloseD;
                             const probOpp = 1 / softCloseOpp;
                             execOdds = 1 / (probX + probOpp);
                             execOdds = execOdds * 0.95; 
-                        }
 
-                        const kellyFrac = calculateKelly(winProbRaw, execOdds);
-                        
-                        if (kellyFrac > 0) {
-                            const stake = currentBankroll * kellyFrac;
-                            signalsExecuted++;
+                            const kellyFrac = calculateKelly(winProbRaw, execOdds);
                             
-                            let betWon = false;
-                            if (isFade && ftr !== winCond) betWon = true; 
-                            if (!isFade && ftr === winCond) betWon = true; 
+                            if (kellyFrac > 0) {
+                                countTier1++;
+                                const stake = globalCurrentBankroll * kellyFrac;
+                                
+                                let betWon = (ftr !== winCond);
+                                
+                                let pnl = betWon ? (stake * (execOdds - 1)) : -stake;
+                                if (betWon) globalWinsTier1++;
+                                globalCurrentBankroll += pnl;
 
-                            let pnl = betWon ? (stake * (execOdds - 1)) : -stake;
-                            if (betWon) wins++;
-                            currentBankroll += pnl;
+                                const sdStr = softDrop > 0 ? "-" + softDrop.toFixed(1) + "%" : "+" + Math.abs(softDrop).toFixed(1) + "%";
+                                const pdStr = sharpDrop > 0 ? "-" + sharpDrop.toFixed(1) + "%" : "+" + Math.abs(sharpDrop).toFixed(1) + "%";
 
+                                aiExportString += `[${sourceName}] MATCH: ${home} vs ${away} | ON: ${side} | FTR: ${ftr} | OPEN: ${softO.toFixed(2)} | S_DROP: ${sdStr} | P_DROP: ${pdStr} | SGNL: ${signal} | EXEC: ${execOdds.toFixed(2)} | WON: ${betWon}\n`;
+
+                                const pnlColor = betWon ? "text-emerald-400" : "text-rose-400";
+                                const pnlStr = betWon ? `+$${pnl.toFixed(2)}` : `-$${Math.abs(pnl).toFixed(2)}`;
+
+                                globalLogHTML += `
+                                <tr class="border-b border-slate-800/50 ${tierClass}">
+                                    <td class="p-2"><span class="font-bold text-white">${home}</span> vs <span class="text-slate-400">${away}</span><br><span class="text-[8px] text-indigo-400 font-bold">[${sourceName}] [ON: ${side} @ ${softO.toFixed(2)}]</span></td>
+                                    <td class="p-2 text-[9px] font-mono text-slate-400">S: ${sdStr}<br>P: ${pdStr}</td>
+                                    <td class="p-2"><span class="text-indigo-400 font-bold">${signal}</span><br><span class="text-[8px] text-slate-500 uppercase">${action} | @${execOdds.toFixed(2)}</span></td>
+                                    <td class="p-2 text-center font-bold ${betWon ? 'text-emerald-500' : 'text-rose-500'}">${ftr} (${betWon ? 'WIN' : 'LOSS'})</td>
+                                    <td class="p-2 text-right font-mono font-bold ${pnlColor}">${pnlStr}</td>
+                                    <td class="p-2 text-right font-mono text-amber-500 font-bold">$${globalCurrentBankroll.toFixed(2)}</td>
+                                </tr>`;
+                            }
+                        } 
+                        // Just display Tier 2 without affecting Bankroll
+                        else if (tierClass === "tier-2") {
+                            countTier2++;
                             const sdStr = softDrop > 0 ? "-" + softDrop.toFixed(1) + "%" : "+" + Math.abs(softDrop).toFixed(1) + "%";
                             const pdStr = sharpDrop > 0 ? "-" + sharpDrop.toFixed(1) + "%" : "+" + Math.abs(sharpDrop).toFixed(1) + "%";
 
-                            aiExportString += `MATCH: ${home} vs ${away} | TARGET: ${side} | FTR: ${ftr} | OPEN_ODDS: ${softO.toFixed(2)} | EXEC_ODDS: ${execOdds.toFixed(2)} | STAKE: $${stake.toFixed(2)} | WON: ${betWon}\n`;
-
-                            const rowClass = betWon ? "bg-emerald-900/10" : "bg-rose-900/10";
-                            const pnlColor = betWon ? "text-emerald-400" : "text-rose-400";
-                            const pnlStr = betWon ? `+$${pnl.toFixed(2)}` : `-$${Math.abs(pnl).toFixed(2)}`;
-
-                            logHTML += `
-                            <tr class="border-b border-slate-800/50 ${rowClass}">
-                                <td class="p-2"><span class="font-bold text-white">${home}</span> vs <span class="text-slate-400">${away}</span><br><span class="text-[8px] text-indigo-400 font-bold">[${side} @ ${softO.toFixed(2)}]</span></td>
+                            globalLogHTML += `
+                            <tr class="border-b border-slate-800/50 ${tierClass}">
+                                <td class="p-2"><span class="font-bold text-white">${home}</span> vs <span class="text-slate-400">${away}</span><br><span class="text-[8px] text-indigo-400 font-bold">[${sourceName}] [ON: ${side} @ ${softO.toFixed(2)}]</span></td>
                                 <td class="p-2 text-[9px] font-mono text-slate-400">S: ${sdStr}<br>P: ${pdStr}</td>
-                                <td class="p-2"><span class="text-indigo-400 font-bold">${signal}</span><br><span class="text-[8px] text-slate-500 uppercase">${action} | @${execOdds.toFixed(2)}</span></td>
-                                <td class="p-2 text-center font-bold ${betWon ? 'text-emerald-500' : 'text-rose-500'}">${ftr} (${betWon ? 'WIN' : 'LOSS'})</td>
-                                <td class="p-2 text-right font-mono font-bold ${pnlColor}">${pnlStr}</td>
-                                <td class="p-2 text-right font-mono text-amber-500 font-bold">$${currentBankroll.toFixed(2)}</td>
+                                <td class="p-2"><span class="text-emerald-400 font-bold">${signal}</span><br><span class="text-[8px] text-slate-500 uppercase">${action}</span></td>
+                                <td class="p-2 text-center font-bold text-slate-500">${ftr} (TRACKED)</td>
+                                <td class="p-2 text-right font-mono font-bold text-slate-500">$0.00</td>
+                                <td class="p-2 text-right font-mono text-slate-500 font-bold">$${globalCurrentBankroll.toFixed(2)}</td>
                             </tr>`;
                         }
                     }
                 }
             }
 
-            if(signalsExecuted === 0) {
-                logHTML = `<tr><td colspan="6" class="text-center p-8 text-rose-500 font-bold uppercase">No valid edge detected in this file.</td></tr>`;
-                aiExportString += "NO SIGNALS EXECUTED.\n";
+            renderResults(startBankroll);
+        }
+
+        function renderResults(startBankroll) {
+            if(countTier1 === 0 && countTier2 === 0) {
+                globalLogHTML = `<tr><td colspan="6" class="text-center p-8 text-rose-500 font-bold uppercase">No extreme movements found. The Sniper found no targets.</td></tr>`;
+                aiExportString += "NO TARGETS FOUND.\n";
             } else {
-                aiExportString += `\nSUMMARY: Total Signals: ${signalsExecuted} | Win Rate: ${Math.round((wins/signalsExecuted)*100)}% | Final Bankroll: $${currentBankroll.toFixed(2)}\n`;
+                let winRate = countTier1 > 0 ? Math.round((globalWinsTier1 / countTier1) * 100) : 0;
+                aiExportString += `\nSUMMARY: TIER 1 (Traps): ${countTier1} | Hit Rate (T1): ${winRate}% | Final Bankroll: $${globalCurrentBankroll.toFixed(2)}\n`;
             }
 
-            document.getElementById('btBody').innerHTML = logHTML;
-            document.getElementById('resScanned').innerText = totalScanned;
-            document.getElementById('resSignals').innerText = signalsExecuted;
-            document.getElementById('resWinRate').innerText = signalsExecuted > 0 ? Math.round((wins / signalsExecuted) * 100) + "%" : "0%";
+            document.getElementById('btBody').innerHTML = globalLogHTML;
+            document.getElementById('resScanned').innerText = globalTotalScanned;
+            document.getElementById('resTraps').innerText = countTier1;
+            document.getElementById('resSmart').innerText = countTier2;
+            document.getElementById('resWinRate').innerText = countTier1 > 0 ? Math.round((globalWinsTier1 / countTier1) * 100) + "%" : "0%";
             
             const bankrollEl = document.getElementById('resBankroll');
-            bankrollEl.innerText = "$" + currentBankroll.toFixed(2);
-            if (currentBankroll > startBankroll) {
+            bankrollEl.innerText = "$" + globalCurrentBankroll.toFixed(2);
+            if (globalCurrentBankroll > startBankroll) {
                 bankrollEl.className = "text-2xl font-black text-emerald-400 drop-shadow-[0_0_5px_currentColor]";
-            } else if (currentBankroll < startBankroll) {
+            } else if (globalCurrentBankroll < startBankroll) {
                 bankrollEl.className = "text-2xl font-black text-rose-400 drop-shadow-[0_0_5px_currentColor]";
             } else {
                 bankrollEl.className = "text-2xl font-black text-slate-400";
