@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arbitrage & Trap Radar v10.0 | Backtest Simulator</title>
+    <title>Arbitrage & Trap Radar v10.5 | Smart Backtest</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
@@ -28,7 +28,7 @@
     <div class="container mx-auto px-4 py-8 max-w-7xl relative z-10">
         <div class="flex flex-col items-center mb-6 text-center border-b border-cyan-900/50 pb-6">
             <div class="bg-indigo-950/50 text-indigo-400 px-4 py-1 rounded-sm text-xs font-bold tracking-widest uppercase mb-4 border border-indigo-500/30 animate-pulse">
-                System Active // V10.0 Auto-Backtest Engine
+                System Active // V10.5 Auto-Backtest Engine
             </div>
             <h1 class="text-4xl font-extrabold text-white mb-2 tracking-widest uppercase text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500 drop-shadow-[0_0_10px_rgba(99,102,241,0.8)]">
                 Trap Radar & Simulator
@@ -85,11 +85,15 @@
 
         <div id="backtest-section" class="hidden space-y-6">
             
-            <div class="bg-[#0f172a] p-6 border border-indigo-900 shadow-[0_0_20px_rgba(99,102,241,0.05)]">
+            <div class="bg-[#0f172a] p-6 border border-indigo-900 shadow-[0_0_20px_rgba(99,102,241,0.05)] relative">
+                <div id="btErrorMsg" class="hidden mb-4 p-3 bg-rose-950/50 border border-rose-800 text-rose-400 text-xs font-bold">
+                    [ERROR MSG]
+                </div>
+                
                 <div class="flex flex-col md:flex-row items-center justify-between gap-6">
                     <div class="flex-1 w-full">
-                        <label class="block text-[10px] font-bold text-indigo-400 uppercase mb-2">Upload Historic Data (.csv)</label>
-                        <input type="file" id="csvFile" accept="*/*" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-xs file:font-bold file:bg-indigo-950 file:text-indigo-400 hover:file:bg-indigo-900 cursor-pointer border border-indigo-900/50 p-2 bg-[#020617]">
+                        <label class="block text-[10px] font-bold text-indigo-400 uppercase mb-2">Upload Historic Data</label>
+                        <input type="file" id="csvFile" style="width: 100%; padding: 12px; background: #1e293b; color: #818cf8; border: 1px solid #312e81; border-radius: 5px;">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Starting Bankroll</label>
@@ -102,8 +106,8 @@
                         </select>
                     </div>
                     <div class="pt-5">
-                        <button onclick="runBacktest()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black py-2 px-8 shadow-[0_0_15px_rgba(99,102,241,0.4)] uppercase tracking-widest text-sm transition-colors">
-                            Initialize Simulation
+                        <button onclick="runBacktest()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black py-3 px-8 shadow-[0_0_15px_rgba(99,102,241,0.4)] uppercase tracking-widest text-sm transition-colors rounded-sm">
+                            Run Simulation
                         </button>
                     </div>
                 </div>
@@ -155,7 +159,6 @@
     </div>
 
     <script>
-        // Tab Switcher
         function switchTab(tab) {
             document.getElementById('manual-section').style.display = tab === 'manual' ? 'block' : 'none';
             document.getElementById('backtest-section').style.display = tab === 'backtest' ? 'block' : 'none';
@@ -163,7 +166,6 @@
             document.getElementById('tab-backtest').classList.toggle('active', tab === 'backtest');
         }
 
-        // Kelly Engine (Quarter Kelly)
         function calculateKelly(winProb, odds) {
             const p = winProb / 100;
             const q = 1 - p;
@@ -173,14 +175,20 @@
             return kellyFraction > 0 ? (kellyFraction * 0.25) : 0;
         }
 
-        // The Auto-Backtest Function
+        function showError(msg) {
+            const errBox = document.getElementById('btErrorMsg');
+            errBox.innerText = msg;
+            errBox.classList.remove('hidden');
+            setTimeout(() => { errBox.classList.add('hidden'); }, 5000);
+        }
+
         function runBacktest() {
             const fileInput = document.getElementById('csvFile');
             const initialBankroll = parseFloat(document.getElementById('startBankroll').value) || 1000;
             const leagueRisk = parseFloat(document.getElementById('btLeagueRisk').value) || 1.0;
 
             if (!fileInput.files.length) {
-                alert("SYS.ERR: No CSV data file detected.");
+                showError("SYS.ERR: No CSV data file selected. Please choose a file.");
                 return;
             }
 
@@ -188,38 +196,53 @@
                 header: true,
                 skipEmptyLines: true,
                 complete: function(results) {
+                    if (results.errors.length > 0 && results.data.length === 0) {
+                         showError("SYS.ERR: Failed to parse CSV. The file might be corrupted or not a valid CSV format.");
+                         return;
+                    }
                     processSimulation(results.data, initialBankroll, leagueRisk);
+                },
+                error: function(err) {
+                    showError("SYS.ERR: " + err.message);
                 }
             });
         }
 
         function processSimulation(data, startBankroll, leagueRisk) {
             let currentBankroll = startBankroll;
-            let totalScanned = data.length;
+            let totalScanned = 0;
             let signalsExecuted = 0;
             let wins = 0;
             let logHTML = "";
 
             const divThreshold = 18 / leagueRisk;
+            
+            // Check if file has minimum required structure
+            if (data.length > 0 && !data[0].HomeTeam && !data[0].B365H) {
+                 showError("SYS.ERR: Invalid CSV Structure. Cannot find 'HomeTeam' or 'B365H' columns.");
+                 return;
+            }
 
             for (let i = 0; i < data.length; i++) {
                 const row = data[i];
                 
-                // Parse required columns (1X2 Market)
                 const home = row.HomeTeam;
                 const away = row.AwayTeam;
-                const ftr = row.FTR; // 'H', 'D', 'A'
+                const ftr = row.FTR; 
                 
+                if (!home || !ftr) continue;
+                totalScanned++;
+
+                // Fallbacks for older files where B365CH or PSCH might be missing
                 const softO = parseFloat(row.B365H);
-                const softC = parseFloat(row.B365CH) || parseFloat(row.BWH); // Fallback if B365CH missing
-                const sharpO = parseFloat(row.PSH);
-                const sharpC = parseFloat(row.PSCH);
+                const softC = parseFloat(row.B365CH) || parseFloat(row.BWH) || parseFloat(row.BbAvH); 
+                const sharpO = parseFloat(row.PSH) || parseFloat(row.B365H); // If Pinnacle Open missing, assume B365 Open
+                const sharpC = parseFloat(row.PSCH) || parseFloat(row.BbMxH); // If Pinnacle Close missing, use Market Max
+                
+                const softCloseD = parseFloat(row.B365CD) || parseFloat(row.BWD) || parseFloat(row.BbAvD) || 3.0;
+                const softCloseA = parseFloat(row.B365CA) || parseFloat(row.BWA) || parseFloat(row.BbAvA) || 3.0;
 
-                // Need full odds to calculate FADE execution odds
-                const softCloseD = parseFloat(row.B365CD) || parseFloat(row.BWD) || 3.0;
-                const softCloseA = parseFloat(row.B365CA) || parseFloat(row.BWA) || 3.0;
-
-                if (!home || !softO || !softC || !sharpO || !sharpC || !ftr) continue;
+                if (!softO || !softC || !sharpO || !sharpC) continue;
 
                 const softDrop = ((softO - softC) / softO) * 100;
                 const sharpDrop = ((sharpO - sharpC) / sharpO) * 100;
@@ -231,7 +254,6 @@
                 let execOdds = 0;
                 let isFade = false;
 
-                // Core Logic (Focusing on Home Team Drops for 1X2)
                 if (sharpDrop >= (20 / leagueRisk)) {
                     signal = "EXTREME SHARP DROP";
                     action = "FADE (Double Chance X2)";
@@ -246,18 +268,14 @@
                     signal = "SMART MONEY";
                     action = "PRO (Bet Home)";
                     winProbRaw = 48.6;
-                    execOdds = sharpC; // We execute at Sharp Close
+                    execOdds = sharpC; 
                 }
 
-                // If a signal triggered
                 if (winProbRaw > 0) {
                     if (isFade) {
-                        // Calculate fair Double Chance (X2) odds from 1X2 market
-                        // Formula: 1 / ( (1/DrawOdds) + (1/AwayOdds) )
                         const probX = 1 / softCloseD;
                         const prob2 = 1 / softCloseA;
                         execOdds = 1 / (probX + prob2);
-                        // Apply 5% bookmaker margin penalty to make it realistic
                         execOdds = execOdds * 0.95; 
                     }
 
@@ -267,10 +285,9 @@
                     if (stake > 0) {
                         signalsExecuted++;
                         
-                        // Determine Win/Loss
                         let betWon = false;
-                        if (isFade && ftr !== 'H') betWon = true; // X2 wins if Home doesn't win
-                        if (!isFade && ftr === 'H') betWon = true; // Home wins
+                        if (isFade && ftr !== 'H') betWon = true; 
+                        if (!isFade && ftr === 'H') betWon = true; 
 
                         let pnl = 0;
                         if (betWon) {
@@ -282,7 +299,6 @@
 
                         currentBankroll += pnl;
 
-                        // Add to Log HTML
                         const rowClass = betWon ? "bg-emerald-900/10" : "bg-rose-900/10";
                         const pnlColor = betWon ? "text-emerald-400" : "text-rose-400";
                         const pnlStr = betWon ? `+$${pnl.toFixed(2)}` : `-$${Math.abs(pnl).toFixed(2)}`;
@@ -300,11 +316,15 @@
                 }
             }
 
+            if (totalScanned === 0) {
+                showError("SYS.WARN: Scanned file, but found no usable matches. Check file format.");
+                return;
+            }
+
             if(signalsExecuted === 0) {
                 logHTML = `<tr><td colspan="6" class="text-center p-8 text-rose-500 font-bold uppercase">No mathematical edge detected in this dataset.</td></tr>`;
             }
 
-            // Update UI
             document.getElementById('btBody').innerHTML = logHTML;
             document.getElementById('resScanned').innerText = totalScanned;
             document.getElementById('resSignals').innerText = signalsExecuted;
@@ -321,7 +341,6 @@
             }
         }
 
-        // Initialize display
         switchTab('manual');
     </script>
 </body>
