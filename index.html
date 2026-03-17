@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arbitrage & Trap Radar v13.0 | True Calibrated Scanner</title>
+    <title>Arbitrage & Trap Radar v14.0 | Golden Zone Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: 'Courier New', Courier, monospace; }
@@ -27,7 +27,7 @@
     <div class="container mx-auto px-4 py-8 max-w-7xl relative z-10">
         <div class="flex flex-col items-center mb-6 text-center border-b border-cyan-900/50 pb-6">
             <div class="bg-indigo-950/50 text-indigo-400 px-4 py-1 rounded-sm text-xs font-bold tracking-widest uppercase mb-4 border border-indigo-500/30 animate-pulse">
-                System Active // V13.0 True Calibrated Scanner
+                System Active // V14.0 Golden Zone Engine
             </div>
             <h1 class="text-4xl font-extrabold text-white mb-2 tracking-widest uppercase text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500 drop-shadow-[0_0_10px_rgba(99,102,241,0.8)]">
                 Trap Radar & Simulator
@@ -109,7 +109,7 @@
                             Run Sim
                         </button>
                         <button onclick="exportToAI()" class="bg-purple-600 hover:bg-purple-500 text-white font-black py-3 px-6 shadow-[0_0_15px_rgba(168,85,247,0.4)] uppercase tracking-widest text-sm transition-colors rounded-sm border border-purple-400">
-                            Copy Data For AI
+                            Copy Data
                         </button>
                     </div>
                 </div>
@@ -175,7 +175,12 @@
             const q = 1 - p;
             const b = odds - 1;
             if(b <= 0 || p <= 0) return 0;
-            return ((p * b) - q) / b > 0 ? (((p * b) - q) / b) * 0.25 : 0;
+            
+            let kellyFraction = ((p * b) - q) / b;
+            let quarterKelly = kellyFraction * 0.25;
+            
+            // STRICT BANKROLL PROTECTOR: Max 5% of Bankroll per bet
+            return Math.min(quarterKelly, 0.05);
         }
 
         function showError(msg) {
@@ -194,7 +199,7 @@
                 return;
             }
             navigator.clipboard.writeText(aiExportString).then(() => {
-                alert("SYS.MSG: Report copied to clipboard! Paste it in the AI chat to retrain the algorithm.");
+                alert("SYS.MSG: Report copied to clipboard!");
             }).catch(err => {
                 prompt("SYS.WARN: Auto-copy failed. Manually copy the text below:", aiExportString);
             });
@@ -254,7 +259,7 @@
             let wins = 0;
             let logHTML = "";
 
-            aiExportString = `--- AI SIMULATION REPORT v13 | RISK: ${leagueRisk} ---\n`;
+            aiExportString = `--- AI SIMULATION REPORT v14 | RISK: ${leagueRisk} ---\n`;
 
             const divThreshold = 18 / leagueRisk;
             
@@ -267,9 +272,8 @@
                 const ftr = row.FTR; 
                 
                 if (!home || !ftr) continue;
-                totalScanned++; // Count match once
+                totalScanned++; 
 
-                // Scan BOTH Home and Away Teams
                 const sides = ['HOME', 'AWAY'];
                 for (const side of sides) {
                     let softO, softC, sharpO, sharpC, softCloseD, softCloseOpp, winCond;
@@ -294,8 +298,8 @@
 
                     if (!softO || !softC || !sharpO || !sharpC) continue;
 
-                    // ODDS FILTER: Ignore heavy favorites (Below 1.80)
-                    if (softO < 1.80) continue;
+                    // THE GOLDEN ZONE: Filter out massive underdogs and worthless favorites
+                    if (softO < 1.50 || softO > 2.60) continue;
 
                     const softDrop = ((softO - softC) / softO) * 100;
                     const sharpDrop = ((sharpO - sharpC) / sharpO) * 100;
@@ -310,17 +314,18 @@
                     if (sharpDrop >= (20 / leagueRisk)) {
                         signal = "EXTREME SHARP DROP";
                         action = `FADE ${side} (Double Chance)`;
-                        winProbRaw = 75.8;
+                        winProbRaw = 75.8; // Safe to use static prob because we filtered for favorites
                         isFade = true;
                     } else if (divergence >= divThreshold && sharpDrop < 5) {
                         signal = "DIVERGENCE TRAP";
                         action = `FADE ${side} (Double Chance)`;
-                        winProbRaw = 64.3;
+                        winProbRaw = 64.3; 
                         isFade = true;
                     } else if (sharpDrop > (10 / leagueRisk) && sharpDrop < (15 / leagueRisk)) {
                         signal = "SMART MONEY";
                         action = `PRO ${side} (Direct Win)`;
-                        winProbRaw = 48.6;
+                        // Dynamic Probability based on Sharp Closing Odds + 4.5% Edge
+                        winProbRaw = ((1 / sharpC) * 100) + 4.5;
                         execOdds = sharpC; 
                     }
 
@@ -333,9 +338,9 @@
                         }
 
                         const kellyFrac = calculateKelly(winProbRaw, execOdds);
-                        const stake = currentBankroll * kellyFrac;
-
-                        if (stake > 0) {
+                        
+                        if (kellyFrac > 0) {
+                            const stake = currentBankroll * kellyFrac;
                             signalsExecuted++;
                             
                             let betWon = false;
@@ -349,7 +354,7 @@
                             const sdStr = softDrop > 0 ? "-" + softDrop.toFixed(1) + "%" : "+" + Math.abs(softDrop).toFixed(1) + "%";
                             const pdStr = sharpDrop > 0 ? "-" + sharpDrop.toFixed(1) + "%" : "+" + Math.abs(sharpDrop).toFixed(1) + "%";
 
-                            aiExportString += `MATCH: ${home} vs ${away} | TARGET: ${side} | FTR: ${ftr} | OPEN_ODDS: ${softO.toFixed(2)} | SOFT_DROP: ${sdStr} | SHARP_DROP: ${pdStr} | SIGNAL: ${signal} | EXEC_ODDS: ${execOdds.toFixed(2)} | WON: ${betWon}\n`;
+                            aiExportString += `MATCH: ${home} vs ${away} | TARGET: ${side} | FTR: ${ftr} | OPEN_ODDS: ${softO.toFixed(2)} | EXEC_ODDS: ${execOdds.toFixed(2)} | STAKE: $${stake.toFixed(2)} | WON: ${betWon}\n`;
 
                             const rowClass = betWon ? "bg-emerald-900/10" : "bg-rose-900/10";
                             const pnlColor = betWon ? "text-emerald-400" : "text-rose-400";
@@ -357,7 +362,7 @@
 
                             logHTML += `
                             <tr class="border-b border-slate-800/50 ${rowClass}">
-                                <td class="p-2"><span class="font-bold text-white">${home}</span> vs <span class="text-slate-400">${away}</span><br><span class="text-[8px] text-indigo-400 font-bold">[${side} DROP]</span></td>
+                                <td class="p-2"><span class="font-bold text-white">${home}</span> vs <span class="text-slate-400">${away}</span><br><span class="text-[8px] text-indigo-400 font-bold">[${side} @ ${softO.toFixed(2)}]</span></td>
                                 <td class="p-2 text-[9px] font-mono text-slate-400">S: ${sdStr}<br>P: ${pdStr}</td>
                                 <td class="p-2"><span class="text-indigo-400 font-bold">${signal}</span><br><span class="text-[8px] text-slate-500 uppercase">${action} | @${execOdds.toFixed(2)}</span></td>
                                 <td class="p-2 text-center font-bold ${betWon ? 'text-emerald-500' : 'text-rose-500'}">${ftr} (${betWon ? 'WIN' : 'LOSS'})</td>
@@ -370,7 +375,7 @@
             }
 
             if(signalsExecuted === 0) {
-                logHTML = `<tr><td colspan="6" class="text-center p-8 text-rose-500 font-bold uppercase">No mathematical edge detected in this dataset.</td></tr>`;
+                logHTML = `<tr><td colspan="6" class="text-center p-8 text-rose-500 font-bold uppercase">No valid edge detected in this file.</td></tr>`;
                 aiExportString += "NO SIGNALS EXECUTED.\n";
             } else {
                 aiExportString += `\nSUMMARY: Total Signals: ${signalsExecuted} | Win Rate: ${Math.round((wins/signalsExecuted)*100)}% | Final Bankroll: $${currentBankroll.toFixed(2)}\n`;
