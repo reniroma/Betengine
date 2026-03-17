@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arbitrage & Trap Radar v18.0 | Pure Trap Hunter</title>
+    <title>Arbitrage & Trap Radar v19.0 | Hybrid Calibrator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
@@ -28,7 +28,7 @@
     <div class="container mx-auto px-4 py-8 max-w-7xl relative z-10">
         <div class="flex flex-col items-center mb-6 text-center border-b border-cyan-900/50 pb-6">
             <div class="bg-indigo-950/50 text-indigo-400 px-4 py-1 rounded-sm text-xs font-bold tracking-widest uppercase mb-4 border border-indigo-500/30 animate-pulse">
-                System Active // V18.0 Pure Trap Hunter
+                System Active // V19.0 Hybrid Engine
             </div>
             <h1 class="text-4xl font-extrabold text-white mb-2 tracking-widest uppercase text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500 drop-shadow-[0_0_10px_rgba(99,102,241,0.8)]">
                 Trap Radar & Simulator
@@ -122,7 +122,7 @@
                     <h2 id="resScanned" class="text-2xl font-black text-slate-300">0</h2>
                 </div>
                 <div class="bg-[#020617] p-4 border border-cyan-900 text-center">
-                    <p class="text-cyan-600 text-[9px] font-bold uppercase tracking-widest mb-1">Traps Executed</p>
+                    <p class="text-cyan-600 text-[9px] font-bold uppercase tracking-widest mb-1">Signals Executed</p>
                     <h2 id="resSignals" class="text-2xl font-black text-cyan-400">0</h2>
                 </div>
                 <div class="bg-[#020617] p-4 border border-emerald-900 text-center">
@@ -185,7 +185,6 @@
             let kellyFraction = ((p * b) - q) / b;
             let quarterKelly = kellyFraction * 0.25;
             
-            // STRICT BANKROLL PROTECTOR: Max 5% of Bankroll per bet
             return Math.min(quarterKelly, 0.05);
         }
 
@@ -227,7 +226,7 @@
             globalWins = 0;
             globalCurrentBankroll = initialBankroll;
             globalLogHTML = "";
-            aiExportString = `--- AI SIMULATION REPORT v18 (PURE TRAP HUNTER) | RISK: ${leagueRisk} ---\n`;
+            aiExportString = `--- AI SIMULATION REPORT v19 (HYBRID ENGINE) | RISK: ${leagueRisk} ---\n`;
 
             try {
                 for (let i = 0; i < fileInput.files.length; i++) {
@@ -284,8 +283,8 @@
         }
 
         function processSimulation(data, leagueRisk, sourceName) {
-            // Divergence Thresholds
-            const divThreshold = 18 / leagueRisk; 
+            // Divergence Threshold lowered to 12 to catch more valid traps
+            const divThreshold = 12 / leagueRisk; 
             
             if (data.length === 0) return;
 
@@ -324,33 +323,43 @@
 
                     if (!softO || !softC || !sharpO || !sharpC) continue;
 
-                    // THE GOLDEN ZONE: Look for Favorites Only
-                    if (softO < 1.50 || softO > 2.60) continue;
+                    // THE GOLDEN ZONE: Expanded slightly to 2.80
+                    if (softO < 1.50 || softO > 2.80) continue;
 
                     const softDrop = ((softO - softC) / softO) * 100;
                     const sharpDrop = ((sharpO - sharpC) / sharpO) * 100;
+                    
+                    // Filter out microscopic movements to save processing power
+                    if (softDrop < 3 && sharpDrop < 3) continue;
+
                     const divergence = softDrop - sharpDrop;
 
-                    // THE BAIT FILTER: The Soft Bookmaker must present a "Juicy Drop" to bait the public
-                    if (softDrop < divThreshold) continue;
-
-                    // THE PURE TRAP LOGIC: We ONLY play FADE when Sharp completely disagrees or barely moves.
                     let signal = "";
                     let action = "";
                     let winProbRaw = 0;
                     let execOdds = 0;
                     let isFade = false;
 
-                    if (divergence >= divThreshold && sharpDrop < 5) {
+                    // HYBRID LOGIC: Combines Extreme Drops, Divergence, and calibrated Smart Money
+                    if (sharpDrop >= 17) {
+                        signal = "EXTREME SHARP DROP";
+                        action = `FADE ${side} (Double Chance X2)`;
+                        winProbRaw = 74.0; 
+                        isFade = true;
+                    } else if (divergence >= divThreshold && sharpDrop < 6) {
                         signal = "DIVERGENCE TRAP";
                         action = `FADE ${side} (Double Chance X2)`;
-                        winProbRaw = 64.3; // Statistical probability of the favorite NOT winning in a pure trap
+                        winProbRaw = 67.5; 
                         isFade = true;
-                    } 
+                    } else if (sharpDrop >= 8 && sharpDrop < 17) {
+                        signal = "SMART MONEY";
+                        action = `PRO ${side} (Direct Win)`;
+                        winProbRaw = ((1 / sharpC) * 100) + 5.5; 
+                        execOdds = sharpC; 
+                    }
                     
                     if (winProbRaw > 0) {
                         if (isFade) {
-                            // Synthesize Double Chance Odds from 1X2 market, subtract 5% margin
                             const probX = 1 / softCloseD;
                             const probOpp = 1 / softCloseOpp;
                             execOdds = 1 / (probX + probOpp);
@@ -365,6 +374,7 @@
                             
                             let betWon = false;
                             if (isFade && ftr !== winCond) betWon = true; 
+                            if (!isFade && ftr === winCond) betWon = true; 
                             
                             let pnl = betWon ? (stake * (execOdds - 1)) : -stake;
                             if (betWon) globalWins++;
@@ -373,7 +383,7 @@
                             const sdStr = softDrop > 0 ? "-" + softDrop.toFixed(1) + "%" : "+" + Math.abs(softDrop).toFixed(1) + "%";
                             const pdStr = sharpDrop > 0 ? "-" + sharpDrop.toFixed(1) + "%" : "+" + Math.abs(sharpDrop).toFixed(1) + "%";
 
-                            aiExportString += `[${sourceName}] MATCH: ${home} vs ${away} | TRAP ON: ${side} | FTR: ${ftr} | OPEN: ${softO.toFixed(2)} | SOFT_DROP: ${sdStr} | SHARP_DROP: ${pdStr} | SIGNAL: ${signal} | DC_EXEC: ${execOdds.toFixed(2)} | WON: ${betWon}\n`;
+                            aiExportString += `[${sourceName}] MATCH: ${home} vs ${away} | ON: ${side} | FTR: ${ftr} | OPEN: ${softO.toFixed(2)} | SOFT_DROP: ${sdStr} | SHARP_DROP: ${pdStr} | SIGNAL: ${signal} | EXEC: ${execOdds.toFixed(2)} | WON: ${betWon}\n`;
 
                             const rowClass = betWon ? "bg-emerald-900/10" : "bg-rose-900/10";
                             const pnlColor = betWon ? "text-emerald-400" : "text-rose-400";
@@ -381,7 +391,7 @@
 
                             globalLogHTML += `
                             <tr class="border-b border-slate-800/50 ${rowClass}">
-                                <td class="p-2"><span class="font-bold text-white">${home}</span> vs <span class="text-slate-400">${away}</span><br><span class="text-[8px] text-indigo-400 font-bold">[${sourceName}] [TRAP ON: ${side}]</span></td>
+                                <td class="p-2"><span class="font-bold text-white">${home}</span> vs <span class="text-slate-400">${away}</span><br><span class="text-[8px] text-indigo-400 font-bold">[${sourceName}] [ON: ${side}]</span></td>
                                 <td class="p-2 text-[9px] font-mono text-slate-400">S: ${sdStr}<br>P: ${pdStr}</td>
                                 <td class="p-2"><span class="text-indigo-400 font-bold">${signal}</span><br><span class="text-[8px] text-slate-500 uppercase">${action} | @${execOdds.toFixed(2)}</span></td>
                                 <td class="p-2 text-center font-bold ${betWon ? 'text-emerald-500' : 'text-rose-500'}">${ftr} (${betWon ? 'WIN' : 'LOSS'})</td>
@@ -396,10 +406,10 @@
 
         function renderResults(startBankroll) {
             if(globalSignalsExecuted === 0) {
-                globalLogHTML = `<tr><td colspan="6" class="text-center p-8 text-rose-500 font-bold uppercase">No Divergence Traps detected. System stayed safe.</td></tr>`;
-                aiExportString += "NO TRAPS DETECTED. NO BETS EXECUTED.\n";
+                globalLogHTML = `<tr><td colspan="6" class="text-center p-8 text-rose-500 font-bold uppercase">No signals detected.</td></tr>`;
+                aiExportString += "NO SIGNALS EXECUTED.\n";
             } else {
-                aiExportString += `\nSUMMARY: Total Traps: ${globalSignalsExecuted} | Hit Rate (FADE): ${Math.round((globalWins/globalSignalsExecuted)*100)}% | Final Bankroll: $${globalCurrentBankroll.toFixed(2)}\n`;
+                aiExportString += `\nSUMMARY: Total Signals: ${globalSignalsExecuted} | Win Rate: ${Math.round((globalWins/globalSignalsExecuted)*100)}% | Final Bankroll: $${globalCurrentBankroll.toFixed(2)}\n`;
             }
 
             document.getElementById('btBody').innerHTML = globalLogHTML;
