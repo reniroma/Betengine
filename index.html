@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arbitrage & Trap Radar v23.0 | Auto-Optimizer</title>
+    <title>Arbitrage & Trap Radar v24.0 | Flat Staking</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
@@ -34,7 +34,7 @@
     <div class="container mx-auto px-4 py-8 max-w-7xl relative z-10">
         <div class="flex flex-col items-center mb-6 text-center border-b border-cyan-900/50 pb-6">
             <div class="bg-indigo-950/50 text-indigo-400 px-4 py-1 rounded-sm text-xs font-bold tracking-widest uppercase mb-4 border border-indigo-500/30 animate-pulse">
-                System Active // V23.0 Auto-Optimizer Engine
+                System Active // V24.0 Pro Staking Engine
             </div>
             <h1 class="text-4xl font-extrabold text-white mb-2 tracking-widest uppercase text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500 drop-shadow-[0_0_10px_rgba(99,102,241,0.8)]">
                 Trap Radar & Simulator
@@ -64,8 +64,8 @@
             </div>
 
             <div class="bg-[#020617] border border-indigo-900/50 p-4 rounded-sm">
-                <h3 class="text-[10px] text-indigo-500 font-black uppercase tracking-widest mb-4 border-b border-indigo-900/50 pb-2">Manual Calibration (Used for "Test Current")</h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <h3 class="text-[10px] text-indigo-500 font-black uppercase tracking-widest mb-4 border-b border-indigo-900/50 pb-2">Manual Calibration Dashboard</h3>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
                     <div>
                         <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1">Min Odds Filter</label>
                         <input type="number" id="p_minOdds" value="1.50" step="0.01" class="dash-input">
@@ -81,6 +81,10 @@
                     <div>
                         <label class="block text-[9px] font-bold text-emerald-500 uppercase mb-1">Max Sharp Drop %</label>
                         <input type="number" id="p_maxSharp" value="4" step="0.1" class="dash-input">
+                    </div>
+                    <div>
+                        <label class="block text-[9px] font-bold text-sky-400 uppercase mb-1">Flat Stake %</label>
+                        <input type="number" id="p_stakePct" value="3.0" step="0.5" class="dash-input" title="Percentage of bankroll to wager per bet">
                     </div>
                 </div>
             </div>
@@ -139,7 +143,7 @@
                         <tr>
                             <th class="p-2 font-bold uppercase tracking-widest">League / Fixture</th>
                             <th class="p-2 font-bold uppercase tracking-widest">Metrics (S/P)</th>
-                            <th class="p-2 font-bold uppercase tracking-widest">AI Action</th>
+                            <th class="p-2 font-bold uppercase tracking-widest">AI Action (Stake)</th>
                             <th class="p-2 font-bold uppercase tracking-widest text-center">Result</th>
                             <th class="p-2 font-bold uppercase tracking-widest text-right">P/L</th>
                             <th class="p-2 font-bold uppercase tracking-widest text-right">Bankroll</th>
@@ -158,15 +162,6 @@
         let aiExportString = "";
         let globalTotalScanned = 0;
         let cachedDataSets = []; 
-
-        function calculateKelly(winProb, odds) {
-            const p = winProb / 100;
-            const q = 1 - p;
-            const b = odds - 1;
-            if(b <= 0 || p <= 0) return 0;
-            let kellyFraction = ((p * b) - q) / b;
-            return Math.max(0, Math.min(kellyFraction * 0.25, 0.05)); 
-        }
 
         function showError(msg) {
             const errBox = document.getElementById('btErrorMsg');
@@ -263,9 +258,10 @@
             const p_maxOdds = parseFloat(document.getElementById('p_maxOdds').value) || 2.60;
             const p_minSoft = parseFloat(document.getElementById('p_minSoft').value) || 15;
             const p_maxSharp = parseFloat(document.getElementById('p_maxSharp').value) || 4;
+            const p_stakePct = parseFloat(document.getElementById('p_stakePct').value) || 3.0;
 
-            const res = runCoreSimulation(initialBankroll, p_minOdds, p_maxOdds, p_minSoft, p_maxSharp, true);
-            renderLedger(res, initialBankroll, p_minOdds, p_maxOdds, p_minSoft, p_maxSharp);
+            const res = runCoreSimulation(initialBankroll, p_minOdds, p_maxOdds, p_minSoft, p_maxSharp, p_stakePct, true);
+            renderLedger(res, initialBankroll, p_minOdds, p_maxOdds, p_minSoft, p_maxSharp, p_stakePct);
         }
 
         // ================== AUTO OPTIMIZER ==================
@@ -275,28 +271,25 @@
             if (!success) return;
 
             const initialBankroll = parseFloat(document.getElementById('startBankroll').value) || 1000;
+            const p_stakePct = parseFloat(document.getElementById('p_stakePct').value) || 3.0;
             
-            // Define the grid of parameters to test
             const grid_minOdds = [1.4, 1.5, 1.6];
-            const grid_maxOdds = [2.4, 2.6, 2.8, 3.0];
-            const grid_minSoft = [10, 12, 14, 15, 18, 20];
-            const grid_maxSharp = [1, 2, 4, 6];
+            const grid_maxOdds = [2.4, 2.6, 2.8];
+            const grid_minSoft = [10, 12, 14, 15, 18];
+            const grid_maxSharp = [2, 4, 6];
 
             let results = [];
             let totalRuns = grid_minOdds.length * grid_maxOdds.length * grid_minSoft.length * grid_maxSharp.length;
             
             document.getElementById('btBody').innerHTML = `<tr><td colspan="6" class="text-center p-8 text-fuchsia-500 font-bold uppercase animate-pulse">Running Optimizer... Testing ${totalRuns} strategies in background.</td></tr>`;
 
-            // Give UI time to update
             setTimeout(() => {
                 for (let mo of grid_minOdds) {
                     for (let maxo of grid_maxOdds) {
                         for (let ms of grid_minSoft) {
                             for (let msh of grid_maxSharp) {
-                                // Run sim silently (no HTML generation)
-                                let sim = runCoreSimulation(initialBankroll, mo, maxo, ms, msh, false);
+                                let sim = runCoreSimulation(initialBankroll, mo, maxo, ms, msh, p_stakePct, false);
                                 
-                                // Only keep somewhat viable strategies
                                 if (sim.bets > 0) {
                                     results.push({
                                         minO: mo, maxO: maxo, minS: ms, maxSh: msh,
@@ -311,14 +304,11 @@
                     }
                 }
 
-                // Sort by highest bankroll, then winrate
                 results.sort((a, b) => b.bankroll - a.bankroll || b.winRate - a.winRate);
-                
-                // Show top 5
                 const top5 = results.slice(0, 5);
                 renderOptimizerResults(top5);
 
-            }, 100); // 100ms delay to allow UI painting
+            }, 100); 
         }
 
         function renderOptimizerResults(topResults) {
@@ -354,13 +344,15 @@
             runSingleBacktest();
         }
 
-        // ================== CORE LOGIC ==================
-        function runCoreSimulation(startBankroll, p_minOdds, p_maxOdds, p_minSoft, p_maxSharp, generateHTML) {
+        // ================== CORE LOGIC (FLAT STAKING) ==================
+        function runCoreSimulation(startBankroll, p_minOdds, p_maxOdds, p_minSoft, p_maxSharp, p_stakePct, generateHTML) {
             let currentBankroll = startBankroll;
             let totalScanned = 0;
             let betsPlaced = 0;
             let betsWon = 0;
             let logHTML = "";
+
+            const stakeFraction = p_stakePct / 100;
 
             for (const dataset of cachedDataSets) {
                 const data = dataset.data;
@@ -413,11 +405,11 @@
                             let execOdds = 1 / (probX + probOpp);
                             execOdds = execOdds * 0.95; 
 
-                            const kellyFrac = calculateKelly(64.3, execOdds);
+                            // FLAT STAKING CALCULATION
+                            const stake = currentBankroll * stakeFraction;
                             
-                            if (kellyFrac > 0) {
+                            if (stake > 0) {
                                 betsPlaced++;
-                                const stake = currentBankroll * kellyFrac;
                                 let betWon = (ftr !== winCond);
                                 let pnl = betWon ? (stake * (execOdds - 1)) : -stake;
                                 
@@ -435,13 +427,13 @@
                                     <tr class="border-b border-slate-800/50 tier-1 ${rowClass}">
                                         <td class="p-2"><span class="font-bold text-white">${home}</span> vs <span class="text-slate-400">${away}</span><br><span class="text-[8px] text-indigo-400 font-bold">[${sourceName}] [ON: ${side} @ ${softO.toFixed(2)}]</span></td>
                                         <td class="p-2 text-[9px] font-mono text-slate-400">S: ${sdStr}<br>P: ${pdStr}</td>
-                                        <td class="p-2"><span class="text-amber-500 font-bold">TRAP DETECTED</span><br><span class="text-[8px] text-slate-500 uppercase">FADE ${side} | @${execOdds.toFixed(2)}</span></td>
+                                        <td class="p-2"><span class="text-amber-500 font-bold">FADE ${side}</span><br><span class="text-[8px] text-slate-500 uppercase">STAKE: $${stake.toFixed(2)} | @${execOdds.toFixed(2)}</span></td>
                                         <td class="p-2 text-center font-bold ${betWon ? 'text-emerald-500' : 'text-rose-500'}">${ftr} (${betWon ? 'WIN' : 'LOSS'})</td>
                                         <td class="p-2 text-right font-mono font-bold ${pnlColor}">${pnlStr}</td>
                                         <td class="p-2 text-right font-mono text-amber-500 font-bold">$${currentBankroll.toFixed(2)}</td>
                                     </tr>`;
                                     
-                                    aiExportString += `[${sourceName}] MATCH: ${home} vs ${away} | ON: ${side} | OPEN: ${softO.toFixed(2)} | S_DROP: ${sdStr} | P_DROP: ${pdStr} | EXEC: ${execOdds.toFixed(2)} | WON: ${betWon}\n`;
+                                    aiExportString += `[${sourceName}] MATCH: ${home} vs ${away} | ON: ${side} | OPEN: ${softO.toFixed(2)} | S_DROP: ${sdStr} | P_DROP: ${pdStr} | EXEC: ${execOdds.toFixed(2)} | STAKE: $${stake.toFixed(2)} | WON: ${betWon}\n`;
                                 }
                             }
                         }
@@ -458,10 +450,10 @@
             };
         }
 
-        function renderLedger(res, startBankroll, p_minOdds, p_maxOdds, p_minSoft, p_maxSharp) {
+        function renderLedger(res, startBankroll, p_minOdds, p_maxOdds, p_minSoft, p_maxSharp, p_stakePct) {
             globalTotalScanned = res.scanned;
             
-            aiExportString = `--- AI REPORT (MANUAL TEST) ---\nPARAMS: Odds[${p_minOdds}-${p_maxOdds}] | MinDrop:${p_minSoft}% | MaxSharp:${p_maxSharp}%\n\n` + aiExportString;
+            aiExportString = `--- AI REPORT (FLAT STAKE TEST) ---\nPARAMS: Odds[${p_minOdds}-${p_maxOdds}] | MinDrop:${p_minSoft}% | MaxSharp:${p_maxSharp}% | Stake:${p_stakePct}%\n\n` + aiExportString;
 
             if(res.bets === 0) {
                 document.getElementById('btBody').innerHTML = `<tr><td colspan="6" class="text-center p-8 text-rose-500 font-bold uppercase">No targets found with current parameters.</td></tr>`;
