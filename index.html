@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arbitrage & Trap Radar v18.0 | Pure Trap Hunter</title>
+    <title>Arbitrage & Trap Radar v20.0 | The Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
@@ -20,6 +20,8 @@
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #020617; }
         ::-webkit-scrollbar-thumb { background: #06b6d4; border-radius: 3px; }
+        input[type="number"].dash-input { width: 100%; background: #0f172a; border: 1px solid #1e293b; padding: 6px; color: #38bdf8; outline: none; border-radius: 3px; font-weight: bold; text-align: center; }
+        input[type="number"].dash-input:focus { border-color: #6366f1; }
     </style>
 </head>
 <body class="bg-[#020617] text-cyan-500 min-h-screen relative pb-20">
@@ -28,16 +30,16 @@
     <div class="container mx-auto px-4 py-8 max-w-7xl relative z-10">
         <div class="flex flex-col items-center mb-6 text-center border-b border-cyan-900/50 pb-6">
             <div class="bg-indigo-950/50 text-indigo-400 px-4 py-1 rounded-sm text-xs font-bold tracking-widest uppercase mb-4 border border-indigo-500/30 animate-pulse">
-                System Active // V18.0 Pure Trap Hunter
+                System Active // V20.0 The Dashboard Calibrator
             </div>
             <h1 class="text-4xl font-extrabold text-white mb-2 tracking-widest uppercase text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500 drop-shadow-[0_0_10px_rgba(99,102,241,0.8)]">
                 Trap Radar & Simulator
             </h1>
         </div>
 
-        <div class="flex justify-center gap-4 mb-8">
+        <div class="flex justify-center gap-4 mb-6">
             <button onclick="switchTab('manual')" id="tab-manual" class="tab-btn active px-6 py-2 text-xs font-bold uppercase tracking-widest text-slate-400 transition-all hover:text-cyan-400">Live Scanner</button>
-            <button onclick="switchTab('backtest')" id="tab-backtest" class="tab-btn px-6 py-2 text-xs font-bold uppercase tracking-widest text-slate-400 transition-all hover:text-cyan-400">Batch Backtest</button>
+            <button onclick="switchTab('backtest')" id="tab-backtest" class="tab-btn px-6 py-2 text-xs font-bold uppercase tracking-widest text-slate-400 transition-all hover:text-cyan-400">Batch Backtest & Lab</button>
         </div>
 
         <div id="manual-section" class="block">
@@ -45,16 +47,10 @@
                 <div class="xl:col-span-5 bg-[#0f172a] p-6 border border-cyan-900 shadow-[0_0_20px_rgba(6,182,212,0.05)]">
                     <h3 class="text-cyan-400 text-sm font-bold uppercase tracking-widest mb-6 border-b border-cyan-900 pb-2">Manual Uplink</h3>
                     <div class="space-y-5">
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 gap-4">
                             <div>
                                 <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Target ID</label>
                                 <input type="text" id="targetId" placeholder="Team A vs Team B" class="w-full bg-[#020617] border border-cyan-900 p-2 text-cyan-300 outline-none focus:border-cyan-400 text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">League Risk</label>
-                                <select id="leagueRisk" class="w-full bg-[#020617] border border-cyan-900 p-2 text-cyan-300 outline-none text-sm">
-                                    <option value="1.0">Standard</option><option value="1.2">Volatile</option><option value="1.6">Extreme</option>
-                                </select>
                             </div>
                         </div>
                         <div class="bg-[#020617] p-4 border border-cyan-900/50 rounded-sm">
@@ -72,13 +68,13 @@
                                 </div>
                             </div>
                         </div>
-                        <button onclick="alert('Manual scan isolated. Switch to Backtest for automated historic runs.')" class="w-full bg-cyan-950 hover:bg-cyan-900 text-cyan-400 font-bold py-3 border border-cyan-500 uppercase tracking-widest text-sm">
+                        <button onclick="alert('Manual scan isolated. Switch to Backtest & Lab for testing.')" class="w-full bg-cyan-950 hover:bg-cyan-900 text-cyan-400 font-bold py-3 border border-cyan-500 uppercase tracking-widest text-sm">
                             Manual Scan (Standby)
                         </button>
                     </div>
                 </div>
                 <div class="xl:col-span-7 bg-[#0f172a] p-6 border border-cyan-900 flex items-center justify-center">
-                    <p class="text-slate-500 text-sm uppercase tracking-widest">Manual module minimized for backtest priority.</p>
+                    <p class="text-slate-500 text-sm uppercase tracking-widest">Manual module minimized. Use the Laboratory for Data extraction.</p>
                 </div>
             </div>
         </div>
@@ -86,32 +82,57 @@
         <div id="backtest-section" class="hidden space-y-6">
             
             <div class="bg-[#0f172a] p-6 border border-indigo-900 shadow-[0_0_20px_rgba(99,102,241,0.05)] relative">
-                <div id="btErrorMsg" class="hidden mb-4 p-4 bg-rose-950/80 border border-rose-500 text-rose-300 text-xs font-mono rounded overflow-auto max-h-32">
-                    [ERROR MSG]
-                </div>
+                <div id="btErrorMsg" class="hidden mb-4 p-4 bg-rose-950/80 border border-rose-500 text-rose-300 text-xs font-mono rounded overflow-auto max-h-32"></div>
                 
-                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex flex-col md:flex-row items-end justify-between gap-6 mb-6">
                     <div class="flex-1 w-full">
-                        <label class="block text-[10px] font-bold text-indigo-400 uppercase mb-2">Upload Historic Data (.csv or .zip)</label>
+                        <label class="block text-[10px] font-bold text-indigo-400 uppercase mb-2">Upload Historic Data (.csv / .zip)</label>
                         <input type="file" id="csvFile" multiple accept=".csv, .zip, application/zip, application/x-zip-compressed" style="width: 100%; padding: 12px; background: #1e293b; color: #818cf8; border: 1px solid #312e81; border-radius: 5px;">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Starting Bankroll</label>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Start Bankroll</label>
                         <input type="number" id="startBankroll" value="1000" class="w-32 bg-[#020617] border border-indigo-900 p-2 text-indigo-300 outline-none text-center font-bold">
                     </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">League Risk</label>
-                        <select id="btLeagueRisk" class="w-32 bg-[#020617] border border-indigo-900 p-2 text-indigo-300 outline-none text-center text-xs font-bold uppercase">
-                            <option value="1.0">Standard</option><option value="1.2">Volatile</option><option value="1.6">Extreme</option>
-                        </select>
-                    </div>
-                    <div class="pt-5 flex gap-2">
+                    <div class="flex gap-2">
                         <button onclick="runBacktest()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black py-3 px-6 shadow-[0_0_15px_rgba(99,102,241,0.4)] uppercase tracking-widest text-sm transition-colors rounded-sm">
-                            Run Sim
+                            Extract Data
                         </button>
                         <button onclick="exportToAI()" class="bg-purple-600 hover:bg-purple-500 text-white font-black py-3 px-6 shadow-[0_0_15px_rgba(168,85,247,0.4)] uppercase tracking-widest text-sm transition-colors rounded-sm border border-purple-400">
-                            Copy Data
+                            Copy Report
                         </button>
+                    </div>
+                </div>
+
+                <div class="bg-[#020617] border border-indigo-900/50 p-4 rounded-sm">
+                    <h3 class="text-[10px] text-indigo-500 font-black uppercase tracking-widest mb-4 border-b border-indigo-900/50 pb-2">Algorithm Tuning Dashboard (Recalculates on Run)</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
+                        <div>
+                            <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1">Min Odds</label>
+                            <input type="number" id="p_minOdds" value="1.50" step="0.01" class="dash-input">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1">Max Odds</label>
+                            <input type="number" id="p_maxOdds" value="2.80" step="0.01" class="dash-input">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1">Min Soft Drop %</label>
+                            <input type="number" id="p_minSoft" value="12" step="0.1" class="dash-input" title="How much Bet365 must drop to trigger a trap">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1">Max Sharp Drop %</label>
+                            <input type="number" id="p_maxSharp" value="4" step="0.1" class="dash-input" title="Pinnacle must NOT drop more than this to confirm divergence">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1">FADE Prob %</label>
+                            <input type="number" id="p_fadeProb" value="64.3" step="0.1" class="dash-input" title="Estimated Win Probability for FADE bets">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1">Enable Smart Money</label>
+                            <select id="p_smartMoney" class="dash-input">
+                                <option value="NO">NO (Pure Trap)</option>
+                                <option value="YES">YES (Hybrid)</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -122,7 +143,7 @@
                     <h2 id="resScanned" class="text-2xl font-black text-slate-300">0</h2>
                 </div>
                 <div class="bg-[#020617] p-4 border border-cyan-900 text-center">
-                    <p class="text-cyan-600 text-[9px] font-bold uppercase tracking-widest mb-1">Traps Executed</p>
+                    <p class="text-cyan-600 text-[9px] font-bold uppercase tracking-widest mb-1">Signals Executed</p>
                     <h2 id="resSignals" class="text-2xl font-black text-cyan-400">0</h2>
                 </div>
                 <div class="bg-[#020617] p-4 border border-emerald-900 text-center">
@@ -152,7 +173,7 @@
                             </tr>
                         </thead>
                         <tbody id="btBody">
-                            <tr><td colspan="6" class="text-center p-8 text-slate-600 italic">Upload CSV files or a ZIP and initialize simulation...</td></tr>
+                            <tr><td colspan="6" class="text-center p-8 text-slate-600 italic">Upload CSV/ZIP files, set parameters, and click Extract...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -185,8 +206,7 @@
             let kellyFraction = ((p * b) - q) / b;
             let quarterKelly = kellyFraction * 0.25;
             
-            // STRICT BANKROLL PROTECTOR: Max 5% of Bankroll per bet
-            return Math.min(quarterKelly, 0.05);
+            return Math.min(quarterKelly, 0.05); // Cap at 5%
         }
 
         function showError(msg) {
@@ -211,54 +231,58 @@
             });
         }
 
+        // We cache parsed data so tweaking Dashboard params doesn't require re-reading ZIPs
+        let cachedDataSets = []; 
+
         async function runBacktest() {
             hideError();
             const fileInput = document.getElementById('csvFile');
             const initialBankroll = parseFloat(document.getElementById('startBankroll').value) || 1000;
-            const leagueRisk = parseFloat(document.getElementById('btLeagueRisk').value) || 1.0;
 
-            if (!fileInput.files.length) {
-                showError("SYS.ERR: Please select files to scan.");
+            // If files were selected and NOT cached yet, process them
+            if (fileInput.files.length > 0 && cachedDataSets.length === 0) {
+                try {
+                    for (let i = 0; i < fileInput.files.length; i++) {
+                        const file = fileInput.files[i];
+                        const fileName = file.name.toLowerCase();
+
+                        if (fileName.endsWith('.zip')) {
+                            const zipData = await JSZip.loadAsync(file);
+                            const fileNames = Object.keys(zipData.files);
+
+                            for (const name of fileNames) {
+                                if (name.toLowerCase().endsWith('.csv') && !zipData.files[name].dir) {
+                                    const text = await zipData.files[name].async("string");
+                                    const cleanName = name.split('/').pop(); 
+                                    parseAndCache(text, cleanName);
+                                }
+                            }
+                        } else if (fileName.endsWith('.csv')) {
+                            const text = await file.text();
+                            parseAndCache(text, file.name);
+                        }
+                    }
+                } catch (err) {
+                    showError("SYS.ERR: Extraction/Reading failed. Error: " + err.message);
+                    return;
+                }
+            }
+
+            if (cachedDataSets.length === 0) {
+                showError("SYS.ERR: Please select files to scan or ensure valid CSVs are loaded.");
                 return;
             }
 
-            globalTotalScanned = 0;
-            globalSignalsExecuted = 0;
-            globalWins = 0;
-            globalCurrentBankroll = initialBankroll;
-            globalLogHTML = "";
-            aiExportString = `--- AI SIMULATION REPORT v18 (PURE TRAP HUNTER) | RISK: ${leagueRisk} ---\n`;
-
-            try {
-                for (let i = 0; i < fileInput.files.length; i++) {
-                    const file = fileInput.files[i];
-                    const fileName = file.name.toLowerCase();
-
-                    if (fileName.endsWith('.zip')) {
-                        const zipData = await JSZip.loadAsync(file);
-                        const fileNames = Object.keys(zipData.files);
-
-                        for (const name of fileNames) {
-                            if (name.toLowerCase().endsWith('.csv') && !zipData.files[name].dir) {
-                                const text = await zipData.files[name].async("string");
-                                const cleanName = name.split('/').pop(); 
-                                parseAndSimulate(text, leagueRisk, cleanName);
-                            }
-                        }
-                    } else if (fileName.endsWith('.csv')) {
-                        const text = await file.text();
-                        parseAndSimulate(text, leagueRisk, file.name);
-                    }
-                }
-
-                renderResults(initialBankroll);
-
-            } catch (err) {
-                showError("SYS.ERR: Extraction/Reading failed. Error: " + err.message);
-            }
+            // Execute Simulation using Dashboard Parameters
+            executeSimulation(initialBankroll);
         }
 
-        function parseAndSimulate(text, leagueRisk, sourceName) {
+        // Trigger cache clearing if file input changes
+        document.getElementById('csvFile').addEventListener('change', function() {
+            cachedDataSets = [];
+        });
+
+        function parseAndCache(text, sourceName) {
             const cleanText = text.replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
             const lines = cleanText.split('\n').filter(line => line.trim().length > 0);
             
@@ -279,127 +303,148 @@
                 });
                 data.push(rowObj);
             }
-
-            processSimulation(data, leagueRisk, sourceName);
+            
+            cachedDataSets.push({ source: sourceName, data: data });
         }
 
-        function processSimulation(data, leagueRisk, sourceName) {
-            // Divergence Thresholds
-            const divThreshold = 18 / leagueRisk; 
-            
-            if (data.length === 0) return;
+        function executeSimulation(startBankroll) {
+            globalTotalScanned = 0;
+            globalSignalsExecuted = 0;
+            globalWins = 0;
+            globalCurrentBankroll = startBankroll;
+            globalLogHTML = "";
 
-            for (let i = 0; i < data.length; i++) {
-                const row = data[i];
-                const home = row.HomeTeam;
-                const away = row.AwayTeam;
-                const ftr = row.FTR; 
-                
-                if (!home || !ftr) continue;
-                globalTotalScanned++; 
+            // Get parameters from Dashboard
+            const p_minOdds = parseFloat(document.getElementById('p_minOdds').value) || 1.50;
+            const p_maxOdds = parseFloat(document.getElementById('p_maxOdds').value) || 2.80;
+            const p_minSoft = parseFloat(document.getElementById('p_minSoft').value) || 12;
+            const p_maxSharp = parseFloat(document.getElementById('p_maxSharp').value) || 4;
+            const p_fadeProb = parseFloat(document.getElementById('p_fadeProb').value) || 64.3;
+            const p_smartMoney = document.getElementById('p_smartMoney').value === "YES";
 
-                const sides = ['HOME', 'AWAY'];
-                for (const side of sides) {
-                    let softO, softC, sharpO, sharpC, softCloseD, softCloseOpp, winCond;
+            aiExportString = `--- AI SIMULATION REPORT v20 (DASHBOARD) ---\nPARAMS: MinOdds:${p_minOdds}|MaxOdds:${p_maxOdds}|MinSoftDrp:${p_minSoft}%|MaxSharpDrp:${p_maxSharp}%\n\n`;
 
-                    if (side === 'HOME') {
-                        softO = parseFloat(row.B365H);
-                        softC = parseFloat(row.B365CH) || parseFloat(row.BWH) || parseFloat(row.AvgCH) || parseFloat(row.BbAvH) || parseFloat(row.AvgH); 
-                        sharpO = parseFloat(row.PSH) || parseFloat(row.B365H); 
-                        sharpC = parseFloat(row.PSCH) || parseFloat(row.AvgCH) || parseFloat(row.BbAvH) || parseFloat(row.AvgH); 
-                        
-                        softCloseD = parseFloat(row.B365CD) || parseFloat(row.BWD) || parseFloat(row.AvgCD) || parseFloat(row.BbAvD) || parseFloat(row.AvgD) || 3.0;
-                        softCloseOpp = parseFloat(row.B365CA) || parseFloat(row.BWA) || parseFloat(row.AvgCA) || parseFloat(row.BbAvA) || parseFloat(row.AvgA) || 3.0;
-                        winCond = 'H';
-                    } else {
-                        softO = parseFloat(row.B365A);
-                        softC = parseFloat(row.B365CA) || parseFloat(row.BWA) || parseFloat(row.AvgCA) || parseFloat(row.BbAvA) || parseFloat(row.AvgA); 
-                        sharpO = parseFloat(row.PSA) || parseFloat(row.B365A); 
-                        sharpC = parseFloat(row.PSCA) || parseFloat(row.AvgCA) || parseFloat(row.BbAvA) || parseFloat(row.AvgA); 
-                        
-                        softCloseD = parseFloat(row.B365CD) || parseFloat(row.BWD) || parseFloat(row.AvgCD) || parseFloat(row.BbAvD) || parseFloat(row.AvgD) || 3.0;
-                        softCloseOpp = parseFloat(row.B365CH) || parseFloat(row.BWH) || parseFloat(row.AvgCH) || parseFloat(row.BbAvH) || parseFloat(row.AvgH) || 3.0;
-                        winCond = 'A';
-                    }
+            for (const dataset of cachedDataSets) {
+                const data = dataset.data;
+                const sourceName = dataset.source;
 
-                    if (!softO || !softC || !sharpO || !sharpC) continue;
-
-                    // THE GOLDEN ZONE: Look for Favorites Only
-                    if (softO < 1.50 || softO > 2.60) continue;
-
-                    const softDrop = ((softO - softC) / softO) * 100;
-                    const sharpDrop = ((sharpO - sharpC) / sharpO) * 100;
-                    const divergence = softDrop - sharpDrop;
-
-                    // THE BAIT FILTER: The Soft Bookmaker must present a "Juicy Drop" to bait the public
-                    if (softDrop < divThreshold) continue;
-
-                    // THE PURE TRAP LOGIC: We ONLY play FADE when Sharp completely disagrees or barely moves.
-                    let signal = "";
-                    let action = "";
-                    let winProbRaw = 0;
-                    let execOdds = 0;
-                    let isFade = false;
-
-                    if (divergence >= divThreshold && sharpDrop < 5) {
-                        signal = "DIVERGENCE TRAP";
-                        action = `FADE ${side} (Double Chance X2)`;
-                        winProbRaw = 64.3; // Statistical probability of the favorite NOT winning in a pure trap
-                        isFade = true;
-                    } 
+                for (let i = 0; i < data.length; i++) {
+                    const row = data[i];
+                    const home = row.HomeTeam;
+                    const away = row.AwayTeam;
+                    const ftr = row.FTR; 
                     
-                    if (winProbRaw > 0) {
-                        if (isFade) {
-                            // Synthesize Double Chance Odds from 1X2 market, subtract 5% margin
-                            const probX = 1 / softCloseD;
-                            const probOpp = 1 / softCloseOpp;
-                            execOdds = 1 / (probX + probOpp);
-                            execOdds = execOdds * 0.95; 
+                    if (!home || !ftr) continue;
+                    globalTotalScanned++; 
+
+                    const sides = ['HOME', 'AWAY'];
+                    for (const side of sides) {
+                        let softO, softC, sharpO, sharpC, softCloseD, softCloseOpp, winCond;
+
+                        if (side === 'HOME') {
+                            softO = parseFloat(row.B365H);
+                            softC = parseFloat(row.B365CH) || parseFloat(row.BWH) || parseFloat(row.AvgCH) || parseFloat(row.BbAvH) || parseFloat(row.AvgH); 
+                            sharpO = parseFloat(row.PSH) || parseFloat(row.B365H); 
+                            sharpC = parseFloat(row.PSCH) || parseFloat(row.AvgCH) || parseFloat(row.BbAvH) || parseFloat(row.AvgH); 
+                            
+                            softCloseD = parseFloat(row.B365CD) || parseFloat(row.BWD) || parseFloat(row.AvgCD) || parseFloat(row.BbAvD) || parseFloat(row.AvgD) || 3.0;
+                            softCloseOpp = parseFloat(row.B365CA) || parseFloat(row.BWA) || parseFloat(row.AvgCA) || parseFloat(row.BbAvA) || parseFloat(row.AvgA) || 3.0;
+                            winCond = 'H';
+                        } else {
+                            softO = parseFloat(row.B365A);
+                            softC = parseFloat(row.B365CA) || parseFloat(row.BWA) || parseFloat(row.AvgCA) || parseFloat(row.BbAvA) || parseFloat(row.AvgA); 
+                            sharpO = parseFloat(row.PSA) || parseFloat(row.B365A); 
+                            sharpC = parseFloat(row.PSCA) || parseFloat(row.AvgCA) || parseFloat(row.BbAvA) || parseFloat(row.AvgA); 
+                            
+                            softCloseD = parseFloat(row.B365CD) || parseFloat(row.BWD) || parseFloat(row.AvgCD) || parseFloat(row.BbAvD) || parseFloat(row.AvgD) || 3.0;
+                            softCloseOpp = parseFloat(row.B365CH) || parseFloat(row.BWH) || parseFloat(row.AvgCH) || parseFloat(row.BbAvH) || parseFloat(row.AvgH) || 3.0;
+                            winCond = 'A';
                         }
 
-                        const kellyFrac = calculateKelly(winProbRaw, execOdds);
+                        if (!softO || !softC || !sharpO || !sharpC) continue;
+
+                        // FILTER 1: Golden Zone User Params
+                        if (softO < p_minOdds || softO > p_maxOdds) continue;
+
+                        const softDrop = ((softO - softC) / softO) * 100;
+                        const sharpDrop = ((sharpO - sharpC) / sharpO) * 100;
                         
-                        if (kellyFrac > 0) {
-                            const stake = globalCurrentBankroll * kellyFrac;
-                            globalSignalsExecuted++;
+                        let signal = "";
+                        let action = "";
+                        let winProbRaw = 0;
+                        let execOdds = 0;
+                        let isFade = false;
+
+                        // FILTER 2: Divergence Trap Logic
+                        if (softDrop >= p_minSoft && sharpDrop <= p_maxSharp) {
+                            signal = "DIVERGENCE TRAP";
+                            action = `FADE ${side} (DC X2)`;
+                            winProbRaw = p_fadeProb; 
+                            isFade = true;
+                        } 
+                        // FILTER 3: Optional Smart Money Logic
+                        else if (p_smartMoney && sharpDrop >= 12 && sharpDrop < 18) {
+                            signal = "SMART MONEY";
+                            action = `PRO ${side} (Win)`;
+                            winProbRaw = ((1 / sharpC) * 100) + 4.5; 
+                            execOdds = sharpC; 
+                        }
+                        
+                        if (winProbRaw > 0) {
+                            if (isFade) {
+                                const probX = 1 / softCloseD;
+                                const probOpp = 1 / softCloseOpp;
+                                execOdds = 1 / (probX + probOpp);
+                                execOdds = execOdds * 0.95; 
+                            }
+
+                            const kellyFrac = calculateKelly(winProbRaw, execOdds);
                             
-                            let betWon = false;
-                            if (isFade && ftr !== winCond) betWon = true; 
-                            
-                            let pnl = betWon ? (stake * (execOdds - 1)) : -stake;
-                            if (betWon) globalWins++;
-                            globalCurrentBankroll += pnl;
+                            if (kellyFrac > 0) {
+                                const stake = globalCurrentBankroll * kellyFrac;
+                                globalSignalsExecuted++;
+                                
+                                let betWon = false;
+                                if (isFade && ftr !== winCond) betWon = true; 
+                                if (!isFade && ftr === winCond) betWon = true; 
+                                
+                                let pnl = betWon ? (stake * (execOdds - 1)) : -stake;
+                                if (betWon) globalWins++;
+                                globalCurrentBankroll += pnl;
 
-                            const sdStr = softDrop > 0 ? "-" + softDrop.toFixed(1) + "%" : "+" + Math.abs(softDrop).toFixed(1) + "%";
-                            const pdStr = sharpDrop > 0 ? "-" + sharpDrop.toFixed(1) + "%" : "+" + Math.abs(sharpDrop).toFixed(1) + "%";
+                                const sdStr = softDrop > 0 ? "-" + softDrop.toFixed(1) + "%" : "+" + Math.abs(softDrop).toFixed(1) + "%";
+                                const pdStr = sharpDrop > 0 ? "-" + sharpDrop.toFixed(1) + "%" : "+" + Math.abs(sharpDrop).toFixed(1) + "%";
 
-                            aiExportString += `[${sourceName}] MATCH: ${home} vs ${away} | TRAP ON: ${side} | FTR: ${ftr} | OPEN: ${softO.toFixed(2)} | SOFT_DROP: ${sdStr} | SHARP_DROP: ${pdStr} | SIGNAL: ${signal} | DC_EXEC: ${execOdds.toFixed(2)} | WON: ${betWon}\n`;
+                                aiExportString += `[${sourceName}] MATCH: ${home} vs ${away} | ON: ${side} | FTR: ${ftr} | OPEN: ${softO.toFixed(2)} | S_DROP: ${sdStr} | P_DROP: ${pdStr} | SGNL: ${signal} | EXEC: ${execOdds.toFixed(2)} | WON: ${betWon}\n`;
 
-                            const rowClass = betWon ? "bg-emerald-900/10" : "bg-rose-900/10";
-                            const pnlColor = betWon ? "text-emerald-400" : "text-rose-400";
-                            const pnlStr = betWon ? `+$${pnl.toFixed(2)}` : `-$${Math.abs(pnl).toFixed(2)}`;
+                                const rowClass = betWon ? "bg-emerald-900/10" : "bg-rose-900/10";
+                                const pnlColor = betWon ? "text-emerald-400" : "text-rose-400";
+                                const pnlStr = betWon ? `+$${pnl.toFixed(2)}` : `-$${Math.abs(pnl).toFixed(2)}`;
 
-                            globalLogHTML += `
-                            <tr class="border-b border-slate-800/50 ${rowClass}">
-                                <td class="p-2"><span class="font-bold text-white">${home}</span> vs <span class="text-slate-400">${away}</span><br><span class="text-[8px] text-indigo-400 font-bold">[${sourceName}] [TRAP ON: ${side}]</span></td>
-                                <td class="p-2 text-[9px] font-mono text-slate-400">S: ${sdStr}<br>P: ${pdStr}</td>
-                                <td class="p-2"><span class="text-indigo-400 font-bold">${signal}</span><br><span class="text-[8px] text-slate-500 uppercase">${action} | @${execOdds.toFixed(2)}</span></td>
-                                <td class="p-2 text-center font-bold ${betWon ? 'text-emerald-500' : 'text-rose-500'}">${ftr} (${betWon ? 'WIN' : 'LOSS'})</td>
-                                <td class="p-2 text-right font-mono font-bold ${pnlColor}">${pnlStr}</td>
-                                <td class="p-2 text-right font-mono text-amber-500 font-bold">$${globalCurrentBankroll.toFixed(2)}</td>
-                            </tr>`;
+                                globalLogHTML += `
+                                <tr class="border-b border-slate-800/50 ${rowClass}">
+                                    <td class="p-2"><span class="font-bold text-white">${home}</span> vs <span class="text-slate-400">${away}</span><br><span class="text-[8px] text-indigo-400 font-bold">[${sourceName}] [ON: ${side}]</span></td>
+                                    <td class="p-2 text-[9px] font-mono text-slate-400">S: ${sdStr}<br>P: ${pdStr}</td>
+                                    <td class="p-2"><span class="text-indigo-400 font-bold">${signal}</span><br><span class="text-[8px] text-slate-500 uppercase">${action} | @${execOdds.toFixed(2)}</span></td>
+                                    <td class="p-2 text-center font-bold ${betWon ? 'text-emerald-500' : 'text-rose-500'}">${ftr} (${betWon ? 'WIN' : 'LOSS'})</td>
+                                    <td class="p-2 text-right font-mono font-bold ${pnlColor}">${pnlStr}</td>
+                                    <td class="p-2 text-right font-mono text-amber-500 font-bold">$${globalCurrentBankroll.toFixed(2)}</td>
+                                </tr>`;
+                            }
                         }
                     }
                 }
             }
+
+            renderResults(startBankroll);
         }
 
         function renderResults(startBankroll) {
             if(globalSignalsExecuted === 0) {
-                globalLogHTML = `<tr><td colspan="6" class="text-center p-8 text-rose-500 font-bold uppercase">No Divergence Traps detected. System stayed safe.</td></tr>`;
-                aiExportString += "NO TRAPS DETECTED. NO BETS EXECUTED.\n";
+                globalLogHTML = `<tr><td colspan="6" class="text-center p-8 text-rose-500 font-bold uppercase">No signals detected. Tweak Dashboard parameters and Run again.</td></tr>`;
+                aiExportString += "NO SIGNALS EXECUTED.\n";
             } else {
-                aiExportString += `\nSUMMARY: Total Traps: ${globalSignalsExecuted} | Hit Rate (FADE): ${Math.round((globalWins/globalSignalsExecuted)*100)}% | Final Bankroll: $${globalCurrentBankroll.toFixed(2)}\n`;
+                aiExportString += `\nSUMMARY: Total Signals: ${globalSignalsExecuted} | Win Rate: ${Math.round((globalWins/globalSignalsExecuted)*100)}% | Final Bankroll: $${globalCurrentBankroll.toFixed(2)}\n`;
             }
 
             document.getElementById('btBody').innerHTML = globalLogHTML;
