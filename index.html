@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arbitrage & Trap Radar v15.0 | ZIP Multi-Scanner</title>
+    <title>Arbitrage & Trap Radar v16.0 | Noise Canceller</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
@@ -28,7 +28,7 @@
     <div class="container mx-auto px-4 py-8 max-w-7xl relative z-10">
         <div class="flex flex-col items-center mb-6 text-center border-b border-cyan-900/50 pb-6">
             <div class="bg-indigo-950/50 text-indigo-400 px-4 py-1 rounded-sm text-xs font-bold tracking-widest uppercase mb-4 border border-indigo-500/30 animate-pulse">
-                System Active // V15.0 ZIP Multi-Scanner
+                System Active // V16.0 Noise Canceller
             </div>
             <h1 class="text-4xl font-extrabold text-white mb-2 tracking-widest uppercase text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500 drop-shadow-[0_0_10px_rgba(99,102,241,0.8)]">
                 Trap Radar & Simulator
@@ -186,7 +186,7 @@
             let kellyFraction = ((p * b) - q) / b;
             let quarterKelly = kellyFraction * 0.25;
             
-            return Math.min(quarterKelly, 0.05); // Max 5% of Bankroll
+            return Math.min(quarterKelly, 0.05); // Max 5% of Bankroll per bet
         }
 
         function showError(msg) {
@@ -232,7 +232,7 @@
             globalWins = 0;
             globalCurrentBankroll = initialBankroll;
             globalLogHTML = "";
-            aiExportString = `--- AI SIMULATION REPORT v15 (MULTI-SCAN) | RISK: ${leagueRisk} ---\n`;
+            aiExportString = `--- AI SIMULATION REPORT v16 (NOISE CANCELLER) | RISK: ${leagueRisk} ---\n`;
 
             try {
                 if (fileName.endsWith('.zip')) {
@@ -245,7 +245,7 @@
                         if (name.toLowerCase().endsWith('.csv') && !zipData.files[name].dir) {
                             foundCSV = true;
                             const text = await zipData.files[name].async("string");
-                            const cleanName = name.split('/').pop(); // Get just the file name, not the path
+                            const cleanName = name.split('/').pop(); 
                             parseAndSimulate(text, leagueRisk, cleanName);
                         }
                     }
@@ -271,17 +271,14 @@
         }
 
         function parseAndSimulate(text, leagueRisk, sourceName) {
-            // Clean the text from invisible phone characters and uniform line endings
             const cleanText = text.replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
             const lines = cleanText.split('\n').filter(line => line.trim().length > 0);
             
-            if (lines.length < 2) return; // Skip empty files in ZIP
+            if (lines.length < 2) return; 
 
-            // Detect delimiter
             const delimiter = lines[0].indexOf(';') > -1 ? ';' : ',';
             const headers = lines[0].split(delimiter).map(h => h.replace(/['"\s]/g, '').trim());
 
-            // Build array of objects
             const data = [];
             for(let i = 1; i < lines.length; i++) {
                 const rowStr = lines[i];
@@ -295,7 +292,6 @@
                 data.push(rowObj);
             }
 
-            // Run the math for this specific file
             processSimulation(data, leagueRisk, sourceName);
         }
 
@@ -317,21 +313,24 @@
                 for (const side of sides) {
                     let softO, softC, sharpO, sharpC, softCloseD, softCloseOpp, winCond;
 
+                    // STRICT FALLBACK LOGIC: Never use MAX odds, only use Average (AvgCH / BbAvH) or Bookie Open.
                     if (side === 'HOME') {
                         softO = parseFloat(row.B365H);
-                        softC = parseFloat(row.B365CH) || parseFloat(row.BWH) || parseFloat(row.BbAvH) || parseFloat(row.AvgH); 
+                        softC = parseFloat(row.B365CH) || parseFloat(row.BWH) || parseFloat(row.AvgCH) || parseFloat(row.BbAvH) || parseFloat(row.AvgH); 
                         sharpO = parseFloat(row.PSH) || parseFloat(row.B365H); 
-                        sharpC = parseFloat(row.PSCH) || parseFloat(row.BbMxH) || parseFloat(row.PSA) || parseFloat(row.MaxH); 
-                        softCloseD = parseFloat(row.B365CD) || parseFloat(row.BWD) || parseFloat(row.BbAvD) || parseFloat(row.AvgD) || 3.0;
-                        softCloseOpp = parseFloat(row.B365CA) || parseFloat(row.BWA) || parseFloat(row.BbAvA) || parseFloat(row.AvgA) || 3.0;
+                        sharpC = parseFloat(row.PSCH) || parseFloat(row.AvgCH) || parseFloat(row.BbAvH) || parseFloat(row.AvgH); 
+                        
+                        softCloseD = parseFloat(row.B365CD) || parseFloat(row.BWD) || parseFloat(row.AvgCD) || parseFloat(row.BbAvD) || parseFloat(row.AvgD) || 3.0;
+                        softCloseOpp = parseFloat(row.B365CA) || parseFloat(row.BWA) || parseFloat(row.AvgCA) || parseFloat(row.BbAvA) || parseFloat(row.AvgA) || 3.0;
                         winCond = 'H';
                     } else {
                         softO = parseFloat(row.B365A);
-                        softC = parseFloat(row.B365CA) || parseFloat(row.BWA) || parseFloat(row.BbAvA) || parseFloat(row.AvgA); 
+                        softC = parseFloat(row.B365CA) || parseFloat(row.BWA) || parseFloat(row.AvgCA) || parseFloat(row.BbAvA) || parseFloat(row.AvgA); 
                         sharpO = parseFloat(row.PSA) || parseFloat(row.B365A); 
-                        sharpC = parseFloat(row.PSCA) || parseFloat(row.BbMxA) || parseFloat(row.PSH) || parseFloat(row.MaxA); 
-                        softCloseD = parseFloat(row.B365CD) || parseFloat(row.BWD) || parseFloat(row.BbAvD) || parseFloat(row.AvgD) || 3.0;
-                        softCloseOpp = parseFloat(row.B365CH) || parseFloat(row.BWH) || parseFloat(row.BbAvH) || parseFloat(row.AvgH) || 3.0;
+                        sharpC = parseFloat(row.PSCA) || parseFloat(row.AvgCA) || parseFloat(row.BbAvA) || parseFloat(row.AvgA); 
+                        
+                        softCloseD = parseFloat(row.B365CD) || parseFloat(row.BWD) || parseFloat(row.AvgCD) || parseFloat(row.BbAvD) || parseFloat(row.AvgD) || 3.0;
+                        softCloseOpp = parseFloat(row.B365CH) || parseFloat(row.BWH) || parseFloat(row.AvgCH) || parseFloat(row.BbAvH) || parseFloat(row.AvgH) || 3.0;
                         winCond = 'A';
                     }
 
@@ -342,6 +341,10 @@
 
                     const softDrop = ((softO - softC) / softO) * 100;
                     const sharpDrop = ((sharpO - sharpC) / sharpO) * 100;
+                    
+                    // THE BAIT FILTER: Bookie must drop odds by at least 4% to be considered a trap/move.
+                    if (softDrop < 4 && sharpDrop < 4) continue;
+
                     const divergence = softDrop - sharpDrop;
 
                     let signal = "";
@@ -392,8 +395,7 @@
                             const sdStr = softDrop > 0 ? "-" + softDrop.toFixed(1) + "%" : "+" + Math.abs(softDrop).toFixed(1) + "%";
                             const pdStr = sharpDrop > 0 ? "-" + sharpDrop.toFixed(1) + "%" : "+" + Math.abs(sharpDrop).toFixed(1) + "%";
 
-                            // Include the source file name in the AI Report
-                            aiExportString += `[${sourceName}] MATCH: ${home} vs ${away} | TARGET: ${side} | FTR: ${ftr} | OPEN_ODDS: ${softO.toFixed(2)} | EXEC_ODDS: ${execOdds.toFixed(2)} | STAKE: $${stake.toFixed(2)} | WON: ${betWon}\n`;
+                            aiExportString += `[${sourceName}] MATCH: ${home} vs ${away} | TARGET: ${side} | FTR: ${ftr} | OPEN: ${softO.toFixed(2)} | SOFT_DROP: ${sdStr} | SHARP_DROP: ${pdStr} | SIGNAL: ${signal} | EXEC: ${execOdds.toFixed(2)} | STAKE: $${stake.toFixed(2)} | WON: ${betWon}\n`;
 
                             const rowClass = betWon ? "bg-emerald-900/10" : "bg-rose-900/10";
                             const pnlColor = betWon ? "text-emerald-400" : "text-rose-400";
