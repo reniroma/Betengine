@@ -1,1145 +1,328 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>BetEngine – Odds Comparison</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root {
-      --bg-main: #0b0c10;
-      --bg-header: #111318;
-      --bg-subheader: #181b22;
-      --bg-panel: #151821;
-      --border-soft: #2a2f3a;
-      --border-strong: #3c4454;
-      --accent: #ff9d00;
-      --accent-soft: #ffb84a;
-      --link: #00eaff;
-      --danger: #ff4a4a;
-      --text-main: #f3f5ff;
-      --text-muted: #9ca3b5;
-      --text-soft: #6f7481;
-      --row-alt: #11141d;
-      --row-hover: #1f2431;
-      --best-odd-bg: #172d1c;
-      --best-odd-border: #2ecc71;
-      --badge-live: #ff4a4a;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-      background-color: var(--bg-main);
-      color: var(--text-main);
-    }
-
-    a {
-      color: var(--link);
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    /* HEADER */
-
-    .header {
-      background: linear-gradient(to bottom, #181b22, #10131a);
-      border-bottom: 1px solid var(--border-strong);
-    }
-
-    .header-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 18px;
-      font-size: 13px;
-      color: var(--text-soft);
-    }
-
-    .header-top-left,
-    .header-top-right {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .header-top span,
-    .header-top a {
-      white-space: nowrap;
-    }
-
-    .header-main {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 18px;
-      border-top: 1px solid var(--border-soft);
-      border-bottom: 1px solid var(--border-soft);
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 800;
-      font-size: 20px;
-      letter-spacing: 0.04em;
-    }
-
-    .logo-mark {
-      width: 26px;
-      height: 26px;
-      border-radius: 8px;
-      border: 2px solid var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      color: var(--accent);
-    }
-
-    .logo-subtitle {
-      font-size: 11px;
-      color: var(--text-soft);
-      margin-top: 2px;
-    }
-
-    .header-main-center {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .primary-tabs {
-      display: flex;
-      gap: 16px;
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    .primary-tab {
-      padding-bottom: 4px;
-      border-bottom: 2px solid transparent;
-      cursor: pointer;
-      color: var(--text-muted);
-    }
-
-    .primary-tab.active {
-      color: var(--accent);
-      border-bottom-color: var(--accent);
-    }
-
-    .header-main-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      padding: 6px 14px;
-      font-size: 13px;
-      border: 1px solid transparent;
-      cursor: pointer;
-      background: none;
-      color: var(--text-main);
-    }
-
-    .btn-outline {
-      border-color: var(--border-soft);
-    }
-
-    .btn-accent {
-      background: linear-gradient(135deg, var(--accent), var(--accent-soft));
-      color: #050509;
-      font-weight: 600;
-      border: none;
-    }
-
-    .btn-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: 999px;
-      border: 1px solid var(--border-soft);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 15px;
-      color: var(--text-muted);
-      background: #141824;
-      cursor: pointer;
-    }
-
-    .header-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 18px;
-      background: var(--bg-subheader);
-      border-top: 1px solid #1e2230;
-    }
-
-    .header-bottom-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 13px;
-    }
-
-    .date-pill {
-      padding: 3px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border-soft);
-      background: #10131c;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-    }
-
-    .date-pill.active {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .header-bottom-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 12px;
-      color: var(--text-soft);
-    }
-
-    .toggle-link {
-      cursor: pointer;
-    }
-
-    .toggle-link.active {
-      color: var(--accent);
-    }
-
-    .divider-vertical {
-      width: 1px;
-      height: 16px;
-      background: var(--border-soft);
-    }
-
-    .live-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: rgba(255, 74, 74, 0.1);
-      color: var(--danger);
-      border: 1px solid rgba(255, 74, 74, 0.6);
-    }
-
-    .live-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: var(--danger);
-      box-shadow: 0 0 8px var(--danger);
-    }
-
-    /* LAYOUT */
-
-    .page {
-      display: flex;
-      min-height: calc(100vh - 120px);
-      padding: 12px 16px 18px;
-      gap: 12px;
-    }
-
-    .col-left {
-      width: 210px;
-      flex-shrink: 0;
-    }
-
-    .col-main {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .col-right {
-      width: 220px;
-      flex-shrink: 0;
-    }
-
-    .panel {
-      background: var(--bg-panel);
-      border-radius: 6px;
-      border: 1px solid var(--border-soft);
-      padding: 8px 10px;
-    }
-
-    .panel-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 4px 2px 6px;
-      border-bottom: 1px solid var(--border-soft);
-      margin-bottom: 4px;
-      font-size: 12px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .panel-header span {
-      font-weight: 600;
-    }
-
-    /* LEFT COLUMN – SPORTS TREE */
-
-    .sports-tree {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      font-size: 13px;
-    }
-
-    .sports-tree li {
-      padding: 5px 4px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      border-radius: 4px;
-      color: var(--text-muted);
-    }
-
-    .sports-tree li:hover {
-      background: #1b1f2a;
-      color: var(--text-main);
-    }
-
-    .sports-tree li.active {
-      background: #1e2532;
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    .sports-tree-label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .sport-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: #202637;
-      display: inline-block;
-    }
-
-    .sports-count {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
-    /* MAIN – FILTER BAR */
-
-    .filter-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 6px;
-      padding: 6px 8px;
-      border-radius: 6px;
-      background: var(--bg-panel);
-      border: 1px solid var(--border-soft);
-      font-size: 12px;
-      color: var(--text-soft);
-    }
-
-    .filter-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .filter-pill {
-      padding: 4px 9px;
-      border-radius: 999px;
-      border: 1px solid var(--border-soft);
-      background: #11141e;
-      cursor: pointer;
-    }
-
-    .filter-pill.active {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .filter-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .small-input {
-      background: #10131b;
-      border-radius: 4px;
-      border: 1px solid var(--border-soft);
-      padding: 3px 6px;
-      font-size: 12px;
-      color: var(--text-main);
-      min-width: 120px;
-    }
-
-    .small-input::placeholder {
-      color: var(--text-soft);
-    }
-
-    /* MAIN – LEAGUE BLOCKS & ODDS TABLE */
-
-    .league-block {
-      margin-bottom: 12px;
-      border-radius: 6px;
-      overflow: hidden;
-      border: 1px solid var(--border-soft);
-      background: #10131b;
-    }
-
-    .league-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 6px 8px;
-      background: #151821;
-      border-bottom: 1px solid var(--border-soft);
-      font-size: 12px;
-    }
-
-    .league-header-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .league-flag {
-      width: 16px;
-      height: 16px;
-      border-radius: 3px;
-      background: linear-gradient(135deg, #ff4a4a, #ffb84a);
-    }
-
-    .league-name {
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .league-country {
-      color: var(--text-soft);
-      font-size: 11px;
-    }
-
-    .league-header-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
-    .league-toggle {
-      cursor: pointer;
-    }
-
-    .odds-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-    }
-
-    .odds-table thead {
-      background: #181b25;
-    }
-
-    .odds-table th,
-    .odds-table td {
-      padding: 5px 6px;
-      text-align: center;
-      border-bottom: 1px solid #181c28;
-      border-right: 1px solid #181c28;
-      white-space: nowrap;
-    }
-
-    .odds-table th:last-child,
-    .odds-table td:last-child {
-      border-right: none;
-    }
-
-    .odds-table th {
-      color: var(--text-soft);
-      font-weight: 500;
-    }
-
-    .col-match {
-      text-align: left;
-      min-width: 210px;
-    }
-
-    .col-time {
-      width: 46px;
-    }
-
-    .match-row {
-      background: #10131b;
-    }
-
-    .match-row:nth-child(even) {
-      background: var(--row-alt);
-    }
-
-    .match-row:hover {
-      background: var(--row-hover);
-    }
-
-    .match-meta {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .match-teams {
-      display: flex;
-      flex-direction: column;
-      font-size: 12px;
-    }
-
-    .match-team-name {
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .match-team-home {
-      font-weight: 600;
-      color: var(--text-main);
-    }
-
-    .match-team-away {
-      color: var(--text-muted);
-    }
-
-    .match-score {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--accent-soft);
-    }
-
-    .match-status {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
-    .badge-live {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      border-radius: 999px;
-      padding: 1px 6px;
-      font-size: 10px;
-      background: rgba(255, 74, 74, 0.1);
-      color: var(--badge-live);
-      border: 1px solid rgba(255, 74, 74, 0.6);
-    }
-
-    .odd-cell {
-      cursor: pointer;
-      font-weight: 500;
-    }
-
-    .odd-cell.best {
-      border-radius: 4px;
-      border: 1px solid var(--best-odd-border);
-      background: var(--best-odd-bg);
-      box-shadow: 0 0 8px rgba(46, 204, 113, 0.3);
-    }
-
-    .odd-cell.empty {
-      color: var(--text-soft);
-    }
-
-    .bookmaker-name {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
-    .col-bookmaker-group {
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-soft);
-      padding: 4px 0;
-    }
-
-    .col-bookmaker-group span {
-      display: block;
-    }
-
-    .pin-cell {
-      font-size: 12px;
-      color: var(--text-soft);
-      cursor: pointer;
-    }
-
-    /* RIGHT COLUMN – SNIPPETS */
-
-    .snippet-list {
-      list-style: none;
-      padding: 0;
-      margin: 4px 0 0;
-      font-size: 12px;
-    }
-
-    .snippet-list li {
-      padding: 6px 4px;
-      border-bottom: 1px dashed var(--border-soft);
-    }
-
-    .snippet-list li:last-child {
-      border-bottom: none;
-    }
-
-    .snippet-title {
-      color: var(--text-main);
-      margin-bottom: 2px;
-    }
-
-    .snippet-meta {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
-    /* RESPONSIVE */
-
-    @media (max-width: 1100px) {
-      .col-right {
-        display: none;
-      }
-    }
-
-    @media (max-width: 960px) {
-      .col-left {
-        display: none;
-      }
-
-      .page {
-        padding: 10px;
-      }
-
-      .header-main-center {
-        display: none;
-      }
-    }
-
-    @media (max-width: 720px) {
-      .header-top {
-        display: none;
-      }
-
-      .header-main {
-        flex-direction: row;
-        justify-content: space-between;
-        gap: 10px;
-      }
-
-      .logo-subtitle {
-        display: none;
-      }
-
-      .header-bottom-left {
-        flex-wrap: wrap;
-      }
-
-      .filter-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arbitrage & Trap Radar v10.0 | Backtest Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <style>
+        body { font-family: 'Courier New', Courier, monospace; }
+        .crt-overlay {
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 50; opacity: 0.15;
+        }
+        .tab-btn.active { border-bottom: 2px solid #06b6d4; color: #22d3ee; background: rgba(6, 182, 212, 0.1); }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #06b6d4; border-radius: 3px; }
+    </style>
 </head>
-<body>
-  <!-- HEADER -->
-  <header class="header">
-    <div class="header-top">
-      <div class="header-top-left">
-        <span>Sports: <strong>Football</strong></span>
-        <span>Timezone: CET</span>
-        <span>Odds Format: Decimal</span>
-      </div>
-      <div class="header-top-right">
-        <a href="#">Help</a>
-        <a href="#">Bookmakers</a>
-        <a href="#">Contact</a>
-      </div>
+<body class="bg-[#020617] text-cyan-500 min-h-screen relative pb-20">
+    <div class="crt-overlay"></div>
+
+    <div class="container mx-auto px-4 py-8 max-w-7xl relative z-10">
+        <div class="flex flex-col items-center mb-6 text-center border-b border-cyan-900/50 pb-6">
+            <div class="bg-indigo-950/50 text-indigo-400 px-4 py-1 rounded-sm text-xs font-bold tracking-widest uppercase mb-4 border border-indigo-500/30 animate-pulse">
+                System Active // V10.0 Auto-Backtest Engine
+            </div>
+            <h1 class="text-4xl font-extrabold text-white mb-2 tracking-widest uppercase text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500 drop-shadow-[0_0_10px_rgba(99,102,241,0.8)]">
+                Trap Radar & Simulator
+            </h1>
+        </div>
+
+        <div class="flex justify-center gap-4 mb-8">
+            <button onclick="switchTab('manual')" id="tab-manual" class="tab-btn active px-6 py-2 text-xs font-bold uppercase tracking-widest text-slate-400 transition-all hover:text-cyan-400">Live Scanner</button>
+            <button onclick="switchTab('backtest')" id="tab-backtest" class="tab-btn px-6 py-2 text-xs font-bold uppercase tracking-widest text-slate-400 transition-all hover:text-cyan-400">Batch Backtest</button>
+        </div>
+
+        <div id="manual-section" class="block">
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+                <div class="xl:col-span-5 bg-[#0f172a] p-6 border border-cyan-900 shadow-[0_0_20px_rgba(6,182,212,0.05)]">
+                    <h3 class="text-cyan-400 text-sm font-bold uppercase tracking-widest mb-6 border-b border-cyan-900 pb-2">Manual Uplink</h3>
+                    <div class="space-y-5">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Target ID</label>
+                                <input type="text" id="targetId" placeholder="Team A vs Team B" class="w-full bg-[#020617] border border-cyan-900 p-2 text-cyan-300 outline-none focus:border-cyan-400 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">League Risk</label>
+                                <select id="leagueRisk" class="w-full bg-[#020617] border border-cyan-900 p-2 text-cyan-300 outline-none text-sm">
+                                    <option value="1.0">Standard</option><option value="1.2">Volatile</option><option value="1.6">Extreme</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="bg-[#020617] p-4 border border-cyan-900/50 rounded-sm">
+                            <h4 class="text-[10px] text-cyan-500 uppercase tracking-widest mb-3 font-bold text-center">Dual Radar</h4>
+                            <div class="grid grid-cols-2 gap-6">
+                                <div class="space-y-3 border-r border-cyan-900/50 pr-4">
+                                    <span class="text-[10px] font-black text-rose-400 uppercase block text-center">Soft (Bet365)</span>
+                                    <input type="number" id="softOpen" step="0.01" placeholder="Open" class="w-full bg-[#0f172a] border border-rose-900/50 p-2 text-rose-300 text-xs text-center outline-none">
+                                    <input type="number" id="softClose" step="0.01" placeholder="Close" class="w-full bg-[#0f172a] border border-rose-900/50 p-2 text-rose-300 text-xs text-center outline-none">
+                                </div>
+                                <div class="space-y-3">
+                                    <span class="text-[10px] font-black text-emerald-400 uppercase block text-center">Sharp (Pinnacle)</span>
+                                    <input type="number" id="sharpOpen" step="0.01" placeholder="Open" class="w-full bg-[#0f172a] border border-emerald-900/50 p-2 text-emerald-300 text-xs text-center outline-none">
+                                    <input type="number" id="sharpClose" step="0.01" placeholder="Close" class="w-full bg-[#0f172a] border border-emerald-900/50 p-2 text-emerald-300 text-xs text-center outline-none">
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="alert('Manual scan isolated. Switch to Backtest for automated historic runs.')" class="w-full bg-cyan-950 hover:bg-cyan-900 text-cyan-400 font-bold py-3 border border-cyan-500 uppercase tracking-widest text-sm">
+                            Manual Scan (Standby)
+                        </button>
+                    </div>
+                </div>
+                <div class="xl:col-span-7 bg-[#0f172a] p-6 border border-cyan-900 flex items-center justify-center">
+                    <p class="text-slate-500 text-sm uppercase tracking-widest">Manual module minimized for backtest priority.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="backtest-section" class="hidden space-y-6">
+            
+            <div class="bg-[#0f172a] p-6 border border-indigo-900 shadow-[0_0_20px_rgba(99,102,241,0.05)]">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="flex-1 w-full">
+                        <label class="block text-[10px] font-bold text-indigo-400 uppercase mb-2">Upload Historic Data (.csv)</label>
+                        <input type="file" id="csvFile" accept=".csv" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-xs file:font-bold file:bg-indigo-950 file:text-indigo-400 hover:file:bg-indigo-900 cursor-pointer border border-indigo-900/50 p-2 bg-[#020617]">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Starting Bankroll</label>
+                        <input type="number" id="startBankroll" value="1000" class="w-32 bg-[#020617] border border-indigo-900 p-2 text-indigo-300 outline-none text-center font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">League Risk Filter</label>
+                        <select id="btLeagueRisk" class="w-32 bg-[#020617] border border-indigo-900 p-2 text-indigo-300 outline-none text-center text-xs font-bold uppercase">
+                            <option value="1.0">Standard</option><option value="1.2">Volatile</option><option value="1.6">Extreme</option>
+                        </select>
+                    </div>
+                    <div class="pt-5">
+                        <button onclick="runBacktest()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black py-2 px-8 shadow-[0_0_15px_rgba(99,102,241,0.4)] uppercase tracking-widest text-sm transition-colors">
+                            Initialize Simulation
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-[#020617] p-4 border border-slate-800 text-center">
+                    <p class="text-slate-500 text-[9px] font-bold uppercase tracking-widest mb-1">Matches Scanned</p>
+                    <h2 id="resScanned" class="text-2xl font-black text-slate-300">0</h2>
+                </div>
+                <div class="bg-[#020617] p-4 border border-cyan-900 text-center">
+                    <p class="text-cyan-600 text-[9px] font-bold uppercase tracking-widest mb-1">Signals Executed</p>
+                    <h2 id="resSignals" class="text-2xl font-black text-cyan-400">0</h2>
+                </div>
+                <div class="bg-[#020617] p-4 border border-emerald-900 text-center">
+                    <p class="text-emerald-600 text-[9px] font-bold uppercase tracking-widest mb-1">Hit Rate (Win %)</p>
+                    <h2 id="resWinRate" class="text-2xl font-black text-emerald-400">0%</h2>
+                </div>
+                <div class="bg-[#020617] p-4 border border-amber-900 text-center relative overflow-hidden">
+                    <p class="text-amber-600 text-[9px] font-bold uppercase tracking-widest mb-1">Final Bankroll</p>
+                    <h2 id="resBankroll" class="text-2xl font-black text-amber-400 drop-shadow-[0_0_5px_currentColor]">$0.00</h2>
+                </div>
+            </div>
+
+            <div class="bg-[#0f172a] border border-indigo-900 shadow-[0_0_20px_rgba(99,102,241,0.05)] flex flex-col h-[500px]">
+                <div class="p-3 border-b border-indigo-900/50 bg-[#020617]">
+                    <h3 class="text-[10px] font-bold uppercase text-indigo-400 tracking-widest">Simulated Ledger</h3>
+                </div>
+                <div class="overflow-auto flex-1 p-2">
+                    <table class="w-full text-left text-[10px] whitespace-nowrap">
+                        <thead class="text-slate-500 sticky top-0 bg-[#0f172a] z-10 border-b border-slate-800">
+                            <tr>
+                                <th class="p-2 font-bold uppercase tracking-widest">Fixture</th>
+                                <th class="p-2 font-bold uppercase tracking-widest">Metrics (S/P)</th>
+                                <th class="p-2 font-bold uppercase tracking-widest">AI Action</th>
+                                <th class="p-2 font-bold uppercase tracking-widest text-center">Result</th>
+                                <th class="p-2 font-bold uppercase tracking-widest text-right">P/L</th>
+                                <th class="p-2 font-bold uppercase tracking-widest text-right">Bankroll</th>
+                            </tr>
+                        </thead>
+                        <tbody id="btBody">
+                            <tr><td colspan="6" class="text-center p-8 text-slate-600 italic">Upload a CSV and initialize simulation...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <div class="header-main">
-      <div class="logo">
-        <div class="logo-mark">B</div>
-        <div>
-          <div>BetEngine</div>
-          <div class="logo-subtitle">Smart Odds Comparison</div>
-        </div>
-      </div>
+    <script>
+        // Tab Switcher
+        function switchTab(tab) {
+            document.getElementById('manual-section').style.display = tab === 'manual' ? 'block' : 'none';
+            document.getElementById('backtest-section').style.display = tab === 'backtest' ? 'block' : 'none';
+            document.getElementById('tab-manual').classList.toggle('active', tab === 'manual');
+            document.getElementById('tab-backtest').classList.toggle('active', tab === 'backtest');
+        }
 
-      <nav class="header-main-center">
-        <div class="primary-tabs">
-          <div class="primary-tab active">Today</div>
-          <div class="primary-tab">Live</div>
-          <div class="primary-tab">Upcoming</div>
-          <div class="primary-tab">Results</div>
-          <div class="primary-tab">Dropping Odds</div>
-          <div class="primary-tab">Sure Bets</div>
-        </div>
-      </nav>
+        // Kelly Engine (Quarter Kelly)
+        function calculateKelly(winProb, odds) {
+            const p = winProb / 100;
+            const q = 1 - p;
+            const b = odds - 1;
+            if(b <= 0 || p <= 0) return 0;
+            const kellyFraction = ((p * b) - q) / b;
+            return kellyFraction > 0 ? (kellyFraction * 0.25) : 0;
+        }
 
-      <div class="header-main-right">
-        <button class="btn btn-outline">Log in</button>
-        <button class="btn btn-accent">Create account</button>
-        <button class="btn-icon" title="User menu">☰</button>
-      </div>
-    </div>
+        // The Auto-Backtest Function
+        function runBacktest() {
+            const fileInput = document.getElementById('csvFile');
+            const initialBankroll = parseFloat(document.getElementById('startBankroll').value) || 1000;
+            const leagueRisk = parseFloat(document.getElementById('btLeagueRisk').value) || 1.0;
 
-    <div class="header-bottom">
-      <div class="header-bottom-left">
-        <span>Football &rsaquo; Europe &rsaquo; UEFA Champions League</span>
-        <div class="date-pill active">
-          <span>Today</span>
-        </div>
-        <div class="date-pill">
-          <span>Tomorrow</span>
-        </div>
-        <div class="date-pill">
-          <span>3 days</span>
-        </div>
-      </div>
-      <div class="header-bottom-right">
-        <span class="toggle-link active">All matches</span>
-        <span class="toggle-link">Top leagues</span>
-        <div class="divider-vertical"></div>
-        <div class="live-indicator">
-          <span class="live-dot"></span>
-          <span>Live now</span>
-        </div>
-      </div>
-    </div>
-  </header>
+            if (!fileInput.files.length) {
+                alert("SYS.ERR: No CSV data file detected.");
+                return;
+            }
 
-  <!-- PAGE LAYOUT -->
-  <div class="page">
-    <!-- LEFT COLUMN: SPORTS TREE -->
-    <aside class="col-left">
-      <div class="panel">
-        <div class="panel-header">
-          <span>Sports</span>
-          <span>All</span>
-        </div>
-        <ul class="sports-tree">
-          <li class="active">
-            <div class="sports-tree-label">
-              <span class="sport-dot"></span>
-              <span>Football</span>
-            </div>
-            <span class="sports-count">+123</span>
-          </li>
-          <li>
-            <div class="sports-tree-label">
-              <span class="sport-dot"></span>
-              <span>Tennis</span>
-            </div>
-            <span class="sports-count">+42</span>
-          </li>
-          <li>
-            <div class="sports-tree-label">
-              <span class="sport-dot"></span>
-              <span>Basketball</span>
-            </div>
-            <span class="sports-count">+30</span>
-          </li>
-          <li>
-            <div class="sports-tree-label">
-              <span class="sport-dot"></span>
-              <span>Ice Hockey</span>
-            </div>
-            <span classsports-count">+18</span>
-          </li>
-          <li>
-            <div class="sports-tree-label">
-              <span class="sport-dot"></span>
-              <span>Baseball</span>
-            </div>
-            <span class="sports-count">+6</span>
-          </li>
-          <li>
-            <div class="sports-tree-label">
-              <span class="sport-dot"></span>
-              <span>Handball</span>
-            </div>
-            <span class="sports-count">+9</span>
-          </li>
-        </ul>
-      </div>
-    </aside>
+            Papa.parse(fileInput.files[0], {
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    processSimulation(results.data, initialBankroll, leagueRisk);
+                }
+            });
+        }
 
-    <!-- MAIN COLUMN: ODDS LIST -->
-    <main class="col-main">
-      <!-- FILTER BAR -->
-      <div class="filter-bar">
-        <div class="filter-left">
-          <span>Filter:</span>
-          <div class="filter-pill active">All</div>
-          <div class="filter-pill">Live</div>
-          <div class="filter-pill">Not started</div>
-          <div class="filter-pill">Finished</div>
-        </div>
-        <div class="filter-right">
-          <input
-            type="text"
-            class="small-input"
-            placeholder="Search team or league..."
-          />
-          <span>Markets: 1X2</span>
-        </div>
-      </div>
+        function processSimulation(data, startBankroll, leagueRisk) {
+            let currentBankroll = startBankroll;
+            let totalScanned = data.length;
+            let signalsExecuted = 0;
+            let wins = 0;
+            let logHTML = "";
 
-      <!-- LEAGUE BLOCK 1 -->
-      <section class="league-block">
-        <div class="league-header">
-          <div class="league-header-left">
-            <div class="league-flag"></div>
-            <div>
-              <div class="league-name">UEFA Champions League</div>
-              <div class="league-country">Europe</div>
-            </div>
-          </div>
-          <div class="league-header-right">
-            <span>Matches: 4</span>
-            <span class="league-toggle">Collapse</span>
-          </div>
-        </div>
+            const divThreshold = 18 / leagueRisk;
 
-        <table class="odds-table">
-          <thead>
-            <tr>
-              <th class="col-time">Time</th>
-              <th class="col-match">Match</th>
-              <th>Score</th>
-              <th colspan="3">
-                <div class="col-bookmaker-group">
-                  <span>Main odds</span>
-                  <span>(Full time – 1X2)</span>
-                </div>
-              </th>
-              <th>Comparison</th>
-              <th>Pin</th>
-            </tr>
-            <tr>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th>Home</th>
-              <th>Draw</th>
-              <th>Away</th>
-              <th>Highest</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- MATCH ROW 1 -->
-            <tr class="match-row">
-              <td class="col-time">20:45</td>
-              <td class="col-match">
-                <div class="match-meta">
-                  <div class="match-teams">
-                    <span class="match-team-home">
-                      Manchester City
-                    </span>
-                    <span class="match-team-away">
-                      Real Madrid
-                    </span>
-                  </div>
-                  <div class="match-status">
-                    <span class="badge-live">
-                      <span class="live-dot"></span>
-                      62'
-                    </span>
-                    &nbsp; Group stage
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div class="match-score">2 – 1</div>
-              </td>
-              <td>
-                <div class="odd-cell best">1.95</div>
-                <div class="bookmaker-name">Book A</div>
-              </td>
-              <td>
-                <div class="odd-cell">4.10</div>
-                <div class="bookmaker-name">Book B</div>
-              </td>
-              <td>
-                <div class="odd-cell">4.30</div>
-                <div class="bookmaker-name">Book C</div>
-              </td>
-              <td>
-                <div class="odd-cell best">1.95</div>
-                <div class="bookmaker-name">Highest</div>
-              </td>
-              <td class="pin-cell">☆</td>
-            </tr>
+            for (let i = 0; i < data.length; i++) {
+                const row = data[i];
+                
+                // Parse required columns (1X2 Market)
+                const home = row.HomeTeam;
+                const away = row.AwayTeam;
+                const ftr = row.FTR; // 'H', 'D', 'A'
+                
+                const softO = parseFloat(row.B365H);
+                const softC = parseFloat(row.B365CH) || parseFloat(row.BWH); // Fallback if B365CH missing
+                const sharpO = parseFloat(row.PSH);
+                const sharpC = parseFloat(row.PSCH);
 
-            <!-- MATCH ROW 2 -->
-            <tr class="match-row">
-              <td class="col-time">21:00</td>
-              <td class="col-match">
-                <div class="match-meta">
-                  <div class="match-teams">
-                    <span class="match-team-home">
-                      Bayern Munich
-                    </span>
-                    <span class="match-team-away">
-                      Paris SG
-                    </span>
-                  </div>
-                  <div class="match-status">
-                    Not started
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div class="match-score">–</div>
-              </td>
-              <td>
-                <div class="odd-cell">2.15</div>
-                <div class="bookmaker-name">Book A</div>
-              </td>
-              <td>
-                <div class="odd-cell">3.80</div>
-                <div class="bookmaker-name">Book D</div>
-              </td>
-              <td>
-                <div class="odd-cell best">3.40</div>
-                <div class="bookmaker-name">Book C</div>
-              </td>
-              <td>
-                <div class="odd-cell best">2.15</div>
-                <div class="bookmaker-name">Highest</div>
-              </td>
-              <td class="pin-cell">☆</td>
-            </tr>
+                // Need full odds to calculate FADE execution odds
+                const softCloseD = parseFloat(row.B365CD) || parseFloat(row.BWD) || 3.0;
+                const softCloseA = parseFloat(row.B365CA) || parseFloat(row.BWA) || 3.0;
 
-            <!-- MATCH ROW 3 -->
-            <tr class="match-row">
-              <td class="col-time">18:30</td>
-              <td class="col-match">
-                <div class="match-meta">
-                  <div class="match-teams">
-                    <span class="match-team-home">
-                      Inter
-                    </span>
-                    <span class="match-team-away">
-                      Arsenal
-                    </span>
-                  </div>
-                  <div class="match-status">
-                    Finished
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div class="match-score">1 – 1</div>
-              </td>
-              <td>
-                <div class="odd-cell">2.45</div>
-                <div class="bookmaker-name">Book B</div>
-              </td>
-              <td>
-                <div class="odd-cell best">3.30</div>
-                <div class="bookmaker-name">Book D</div>
-              </td>
-              <td>
-                <div class="odd-cell">2.90</div>
-                <div class="bookmaker-name">Book C</div>
-              </td>
-              <td>
-                <div class="odd-cell best">3.30</div>
-                <div class="bookmaker-name">Highest</div>
-              </td>
-              <td class="pin-cell">☆</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
+                if (!home || !softO || !softC || !sharpO || !sharpC || !ftr) continue;
 
-      <!-- LEAGUE BLOCK 2 (EXAMPLE) -->
-      <section class="league-block">
-        <div class="league-header">
-          <div class="league-header-left">
-            <div class="league-flag"></div>
-            <div>
-              <div class="league-name">Premier League</div>
-              <div class="league-country">England</div>
-            </div>
-          </div>
-          <div class="league-header-right">
-            <span>Matches: 2</span>
-            <span class="league-toggle">Collapse</span>
-          </div>
-        </div>
+                const softDrop = ((softO - softC) / softO) * 100;
+                const sharpDrop = ((sharpO - sharpC) / sharpO) * 100;
+                const divergence = softDrop - sharpDrop;
 
-        <table class="odds-table">
-          <thead>
-            <tr>
-              <th class="col-time">Time</th>
-              <th class="col-match">Match</th>
-              <th>Score</th>
-              <th>Home</th>
-              <th>Draw</th>
-              <th>Away</th>
-              <th>Highest</th>
-              <th>Pin</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="match-row">
-              <td class="col-time">16:00</td>
-              <td class="col-match">
-                <div class="match-meta">
-                  <div class="match-teams">
-                    <span class="match-team-home">Liverpool</span>
-                    <span class="match-team-away">Chelsea</span>
-                  </div>
-                  <div class="match-status">
-                    Not started
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div class="match-score">–</div>
-              </td>
-              <td>
-                <div class="odd-cell best">1.95</div>
-                <div class="bookmaker-name">Book A</div>
-              </td>
-              <td>
-                <div class="odd-cell">3.60</div>
-                <div class="bookmaker-name">Book B</div>
-              </td>
-              <td>
-                <div class="odd-cell">4.10</div>
-                <div class="bookmaker-name">Book C</div>
-              </td>
-              <td>
-                <div class="odd-cell best">1.95</div>
-                <div class="bookmaker-name">Highest</div>
-              </td>
-              <td class="pin-cell">☆</td>
-            </tr>
+                let signal = "";
+                let action = "";
+                let winProbRaw = 0;
+                let execOdds = 0;
+                let isFade = false;
 
-            <tr class="match-row">
-              <td class="col-time">18:30</td>
-              <td class="col-match">
-                <div class="match-meta">
-                  <div class="match-teams">
-                    <span class="match-team-home">Newcastle</span>
-                    <span class="match-team-away">Tottenham</span>
-                  </div>
-                  <div class="match-status">
-                    Not started
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div class="match-score">–</div>
-              </td>
-              <td>
-                <div class="odd-cell">2.40</div>
-                <div class="bookmaker-name">Book A</div>
-              </td>
-              <td>
-                <div class="odd-cell best">3.60</div>
-                <div class="bookmaker-name">Book B</div>
-              </td>
-              <td>
-                <div class="odd-cell">2.85</div>
-                <div class="bookmaker-name">Book C</div>
-              </td>
-              <td>
-                <div class="odd-cell best">3.60</div>
-                <div class="bookmaker-name">Highest</div>
-              </td>
-              <td class="pin-cell">☆</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-    </main>
+                // Core Logic (Focusing on Home Team Drops for 1X2)
+                if (sharpDrop >= (20 / leagueRisk)) {
+                    signal = "EXTREME SHARP DROP";
+                    action = "FADE (Double Chance X2)";
+                    winProbRaw = 75.8;
+                    isFade = true;
+                } else if (divergence >= divThreshold && sharpDrop < 5) {
+                    signal = "DIVERGENCE TRAP";
+                    action = "FADE (Double Chance X2)";
+                    winProbRaw = 64.3;
+                    isFade = true;
+                } else if (sharpDrop > (10 / leagueRisk) && sharpDrop < (15 / leagueRisk)) {
+                    signal = "SMART MONEY";
+                    action = "PRO (Bet Home)";
+                    winProbRaw = 48.6;
+                    execOdds = sharpC; // We execute at Sharp Close
+                }
 
-    <!-- RIGHT COLUMN: EXTRA PANELS -->
-    <aside class="col-right">
-      <div class="panel" style="margin-bottom: 10px;">
-        <div class="panel-header">
-          <span>Top leagues</span>
-          <span>Today</span>
-        </div>
-        <ul class="snippet-list">
-          <li>
-            <div class="snippet-title">UEFA Champions League</div>
-            <div class="snippet-meta">4 matches · Live odds</div>
-          </li>
-          <li>
-            <div class="snippet-title">Premier League</div>
-            <div class="snippet-meta">2 matches · Today</div>
-          </li>
-          <li>
-            <div class="snippet-title">LaLiga</div>
-            <div class="snippet-meta">5 matches · This weekend</div>
-          </li>
-        </ul>
-      </div>
+                // If a signal triggered
+                if (winProbRaw > 0) {
+                    if (isFade) {
+                        // Calculate fair Double Chance (X2) odds from 1X2 market
+                        // Formula: 1 / ( (1/DrawOdds) + (1/AwayOdds) )
+                        const probX = 1 / softCloseD;
+                        const prob2 = 1 / softCloseA;
+                        execOdds = 1 / (probX + prob2);
+                        // Apply 5% bookmaker margin penalty to make it realistic
+                        execOdds = execOdds * 0.95; 
+                    }
 
-      <div class="panel">
-        <div class="panel-header">
-          <span>Betting tools</span>
-          <span>Premium</span>
-        </div>
-        <ul class="snippet-list">
-          <li>
-            <div class="snippet-title">Dropping Odds Radar</div>
-            <div class="snippet-meta">Live monitoring of sharp moves.</div>
-          </li>
-          <li>
-            <div class="snippet-title">Sure Bet Scanner</div>
-            <div class="snippet-meta">Detect theoretical arbitrage spots.</div>
-          </li>
-          <li>
-            <div class="snippet-title">Value Index</div>
-            <div class="snippet-meta">Highlight mispriced outcomes.</div>
-          </li>
-        </ul>
-      </div>
-    </aside>
-  </div>
+                    const kellyFrac = calculateKelly(winProbRaw, execOdds);
+                    const stake = currentBankroll * kellyFrac;
+
+                    if (stake > 0) {
+                        signalsExecuted++;
+                        
+                        // Determine Win/Loss
+                        let betWon = false;
+                        if (isFade && ftr !== 'H') betWon = true; // X2 wins if Home doesn't win
+                        if (!isFade && ftr === 'H') betWon = true; // Home wins
+
+                        let pnl = 0;
+                        if (betWon) {
+                            pnl = stake * (execOdds - 1);
+                            wins++;
+                        } else {
+                            pnl = -stake;
+                        }
+
+                        currentBankroll += pnl;
+
+                        // Add to Log HTML
+                        const rowClass = betWon ? "bg-emerald-900/10" : "bg-rose-900/10";
+                        const pnlColor = betWon ? "text-emerald-400" : "text-rose-400";
+                        const pnlStr = betWon ? `+$${pnl.toFixed(2)}` : `-$${Math.abs(pnl).toFixed(2)}`;
+
+                        logHTML += `
+                        <tr class="border-b border-slate-800/50 ${rowClass}">
+                            <td class="p-2"><span class="font-bold text-white">${home}</span> vs <span class="text-slate-400">${away}</span></td>
+                            <td class="p-2 text-[9px] font-mono text-slate-400">S: -${softDrop.toFixed(1)}%<br>P: -${sharpDrop.toFixed(1)}%</td>
+                            <td class="p-2"><span class="text-indigo-400 font-bold">${signal}</span><br><span class="text-[8px] text-slate-500 uppercase">${action} | @${execOdds.toFixed(2)}</span></td>
+                            <td class="p-2 text-center font-bold ${betWon ? 'text-emerald-500' : 'text-rose-500'}">${ftr} (${betWon ? 'WIN' : 'LOSS'})</td>
+                            <td class="p-2 text-right font-mono font-bold ${pnlColor}">${pnlStr}</td>
+                            <td class="p-2 text-right font-mono text-amber-500 font-bold">$${currentBankroll.toFixed(2)}</td>
+                        </tr>`;
+                    }
+                }
+            }
+
+            if(signalsExecuted === 0) {
+                logHTML = `<tr><td colspan="6" class="text-center p-8 text-rose-500 font-bold uppercase">No mathematical edge detected in this dataset.</td></tr>`;
+            }
+
+            // Update UI
+            document.getElementById('btBody').innerHTML = logHTML;
+            document.getElementById('resScanned').innerText = totalScanned;
+            document.getElementById('resSignals').innerText = signalsExecuted;
+            document.getElementById('resWinRate').innerText = signalsExecuted > 0 ? Math.round((wins / signalsExecuted) * 100) + "%" : "0%";
+            
+            const bankrollEl = document.getElementById('resBankroll');
+            bankrollEl.innerText = "$" + currentBankroll.toFixed(2);
+            if (currentBankroll > startBankroll) {
+                bankrollEl.className = "text-2xl font-black text-emerald-400 drop-shadow-[0_0_5px_currentColor]";
+            } else if (currentBankroll < startBankroll) {
+                bankrollEl.className = "text-2xl font-black text-rose-400 drop-shadow-[0_0_5px_currentColor]";
+            } else {
+                bankrollEl.className = "text-2xl font-black text-slate-400";
+            }
+        }
+
+        // Initialize display
+        switchTab('manual');
+    </script>
 </body>
 </html>
